@@ -6,6 +6,18 @@ variable tags {
       Quarter = 2
     }
 }
-variable region {
-  default = "us-east-1"
-}
+
+
+variable region {}
+  
+
+
+
+variable key_name {}
+
+
+
+variable public_key {}
+
+
+  
