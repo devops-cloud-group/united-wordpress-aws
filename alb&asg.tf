@@ -7,8 +7,6 @@
 #    - Application Load Balancer in 3 Availability Zones
 #    - Application Load Balancer TargetGroup
 #------------------------------------------------------------------
-
-
 data "aws_availability_zones" "available" {
   state = "available"
 }
@@ -16,13 +14,12 @@ data "aws_availability_zones" "available" {
 data "aws_ami" "latest_amazon_linux" {
   owners      = ["137112412989"]
   most_recent = true
+  
   filter {
     name   = "name"
     values = ["amzn2-ami-hvm-*-x86_64-gp2"]
   }
 }
-
-
 #-------------------------------------------------------------------------------
 resource "aws_security_group" "server" {
   name   = "Web Security Group"
@@ -34,6 +31,13 @@ resource "aws_security_group" "server" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   ingress {
     description = "TLS from VPC"
     from_port   = 22
@@ -59,6 +63,16 @@ resource "aws_launch_template" "server" {
   image_id               = data.aws_ami.latest_amazon_linux.id
   instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.server.id]
+  user_data = base64encode(file("user_data.sh"))
+  network_interfaces {
+    associate_public_ip_address = true
+    subnet_id = aws_subnet.public_subnet1.id
+    security_groups = [aws_security_group.server.id]
+  }
+  lifecycle {
+    create_before_destroy = true
+    
+  }
 }
 
 resource "aws_autoscaling_group" "server" {
@@ -67,7 +81,7 @@ resource "aws_autoscaling_group" "server" {
   max_size                  = 99
   desired_capacity          = 1
   health_check_grace_period = 300
-  health_check_type         = "ELB"
+  health_check_type         = "EC2"
   vpc_zone_identifier = [aws_subnet.public_subnet2.id,
   aws_subnet.public_subnet1.id, aws_subnet.public_subnet3.id]
   target_group_arns = [aws_lb_target_group.server.arn]
@@ -105,11 +119,8 @@ resource "aws_lb_target_group" "server" {
   port                 = 80
   protocol             = "HTTP"
   deregistration_delay = 10 # seconds
-  slow_start           = 30
+  slow_start           = 0
   health_check {
-    healthy_threshold   = 2
-    interval            = 6
-    protocol            = "HTTP"
     matcher             = "200-209"
     timeout             = 5
     unhealthy_threshold = 10
