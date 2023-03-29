@@ -4,6 +4,7 @@ resource "aws_route53_record" "www" {
   type    = "A"
   ttl     = 300
   records = ["127.0.0.1"]
+  #records = [aws_lb.MYALB.dns_name] 
 
 }
 
