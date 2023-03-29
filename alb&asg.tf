@@ -7,15 +7,6 @@
 #    - Application Load Balancer in 3 Availability Zones
 #    - Application Load Balancer TargetGroup
 #------------------------------------------------------------------
-provider "aws" {
-  region = var.region # Region specified in varible.tf file
-
-  default_tags {
-    tags = {
-      CreatedBy = "Terraform"
-    }
-  }
-}
 
 
 data "aws_availability_zones" "working" {}
@@ -30,11 +21,11 @@ data "aws_ami" "latest_amazon_linux" {
 
 
 #-------------------------------------------------------------------------------
-resource "aws_security_group" "web" {
+resource "aws_security_group" "server" {
   name   = "Web Security Group"
   vpc_id = aws_vpc.main.id
   dynamic "ingress" {
-    for_each = ["80", "443"]
+    for_each = ["80", "443", "22"]
     content {
       from_port   = ingress.value
       to_port     = ingress.value
@@ -49,77 +40,70 @@ resource "aws_security_group" "web" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "Web Security Group"
+    Name = "Web Server Security Group"
   }
 }
 
 #-------------------------------------------------------------------------------
-resource "aws_launch_template" "web" {
+resource "aws_launch_template" "server" {
   name                   = "WebServer-Highly-Available-LT"
   image_id               = data.aws_ami.latest_amazon_linux.id
   instance_type          = "t3.micro"
-  vpc_security_group_ids = [aws_security_group.web.id]
-  user_data              = filebase64("${path.module}/user_data.sh")
+  vpc_security_group_ids = [aws_security_group.server.id]
 }
 
-resource "aws_autoscaling_group" "web" {
-  name                = "WebServer-Highly-Available-ASG-Ver-${aws_launch_template.web.latest_version}"
-  min_size            = 2
-  max_size            = 2
-  min_elb_capacity    = 2
-  health_check_type   = "ELB"
-  vpc_zone_identifier = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
-  target_group_arns   = [aws_lb_target_group.web.arn]
+resource "aws_autoscaling_group" "server" {
+  name                = "WebServer-Highly-Available-ASG-Ver-${aws_launch_template.server.latest_version}"
+  min_size            = 1
+  max_size            = 99
+  min_elb_capacity    = 1
+  health_check_grace_period = 60
+  health_check_type   = "EC2"
+  vpc_zone_identifier = [aws_subnet.public_subnet2.id, 
+  aws_subnet.public_subnet1.id, aws_subnet.public_subnet3.id]
+  target_group_arns   = [aws_lb_target_group.server.arn]
 
   launch_template {
-    id      = aws_launch_template.web.id
-    version = aws_launch_template.web.latest_version
+    id      = aws_launch_template.server.id
+    version = aws_launch_template.server.latest_version
   }
 
-  dynamic "tag" {
-    for_each = {
-      Name   = "WebServer in ASG-v${aws_launch_template.web.latest_version}"
-      TAGKEY = "TAGVALUE"
-    }
-    content {
-      key                 = tag.key
-      value               = tag.value
-      propagate_at_launch = true
-    }
-  }
   lifecycle {
     create_before_destroy = true
   }
 }
 
 #-------------------------------------------------------------------------------
-resource "aws_lb" "web" {
+resource "aws_lb" "server" {
   name               = "WebServer-HighlyAvailable-ALB"
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.web.id]
-  subnets            = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
+  security_groups    = [aws_security_group.server.id]
+  subnets            = [aws_subnet.public_subnet2.id, 
+  aws_subnet.public_subnet1.id, aws_subnet.public_subnet3.id]
 }
 
-resource "aws_lb_target_group" "web" {
+resource "aws_lb_target_group" "server" {
   name                 = "WebServer-HighlyAvailable-TG"
-  vpc_id               = aws_default_vpc.default.id
+  vpc_id               = aws_vpc.main.id
   port                 = 80
   protocol             = "HTTP"
   deregistration_delay = 10 # seconds
+  slow_start = 100
+  
 }
 
 resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.web.arn
+  load_balancer_arn = aws_lb.server.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.web.arn
+    target_group_arn = aws_lb_target_group.server.arn
   }
 }
 
 #-------------------------------------------------------------------------------
 output "web_loadbalancer_url" {
-  value = aws_lb.web.dns_name
+  value = aws_lb.server.dns_name
 }
