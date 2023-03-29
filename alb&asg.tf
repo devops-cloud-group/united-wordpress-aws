@@ -84,7 +84,7 @@ resource "aws_autoscaling_group" "server" {
 
 
 
-#-------------------------------------------------------------------------------
+##-------------------------------------------------------------------------------
 resource "aws_lb" "server" {
   name               = "WebServer-HighlyAvailable-ALB"
   load_balancer_type = "application"
