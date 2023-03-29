@@ -64,11 +64,6 @@ resource "aws_launch_template" "server" {
   instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.server.id]
   user_data = base64encode(file("user_data.sh"))
-  network_interfaces {
-    associate_public_ip_address = true
-    subnet_id = aws_subnet.public_subnet1.id
-    security_groups = [aws_security_group.server.id]
-  }
   lifecycle {
     create_before_destroy = true
     
@@ -81,7 +76,7 @@ resource "aws_autoscaling_group" "server" {
   max_size                  = 99
   desired_capacity          = 1
   health_check_grace_period = 300
-  health_check_type         = "EC2"
+  health_check_type         = "ELB"
   vpc_zone_identifier = [aws_subnet.public_subnet2.id,
   aws_subnet.public_subnet1.id, aws_subnet.public_subnet3.id]
   target_group_arns = [aws_lb_target_group.server.arn]
@@ -121,7 +116,7 @@ resource "aws_lb_target_group" "server" {
   deregistration_delay = 10 # seconds
   slow_start           = 0
   health_check {
-    matcher             = "200-209"
+    matcher             = "200-400"
     timeout             = 5
     unhealthy_threshold = 10
   }
