@@ -9,7 +9,10 @@
 #------------------------------------------------------------------
 
 
-data "aws_availability_zones" "working" {}
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 data "aws_ami" "latest_amazon_linux" {
   owners      = ["137112412989"]
   most_recent = true
@@ -24,15 +27,21 @@ data "aws_ami" "latest_amazon_linux" {
 resource "aws_security_group" "server" {
   name   = "Web Security Group"
   vpc_id = aws_vpc.main.id
-  dynamic "ingress" {
-    for_each = ["80", "443", "22"]
-    content {
-      from_port   = ingress.value
-      to_port     = ingress.value
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    description = "TLS from VPC"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -53,15 +62,15 @@ resource "aws_launch_template" "server" {
 }
 
 resource "aws_autoscaling_group" "server" {
-  name                = "WebServer-Highly-Available-ASG-Ver-${aws_launch_template.server.latest_version}"
-  min_size            = 1
-  max_size            = 99
-  min_elb_capacity    = 1
-  health_check_grace_period = 60
-  health_check_type   = "EC2"
-  vpc_zone_identifier = [aws_subnet.public_subnet2.id, 
+
+  min_size                  = 1
+  max_size                  = 99
+  desired_capacity          = 1
+  health_check_grace_period = 300
+  health_check_type         = "ELB"
+  vpc_zone_identifier = [aws_subnet.public_subnet2.id,
   aws_subnet.public_subnet1.id, aws_subnet.public_subnet3.id]
-  target_group_arns   = [aws_lb_target_group.server.arn]
+  target_group_arns = [aws_lb_target_group.server.arn]
 
   launch_template {
     id      = aws_launch_template.server.id
@@ -73,12 +82,14 @@ resource "aws_autoscaling_group" "server" {
   }
 }
 
+
+
 #-------------------------------------------------------------------------------
 resource "aws_lb" "server" {
   name               = "WebServer-HighlyAvailable-ALB"
   load_balancer_type = "application"
   security_groups    = [aws_security_group.server.id]
-  subnets            = [aws_subnet.public_subnet2.id, 
+  subnets = [aws_subnet.public_subnet2.id,
   aws_subnet.public_subnet1.id, aws_subnet.public_subnet3.id]
 }
 
@@ -88,8 +99,15 @@ resource "aws_lb_target_group" "server" {
   port                 = 80
   protocol             = "HTTP"
   deregistration_delay = 10 # seconds
-  slow_start = 100
-  
+  slow_start           = 30
+  health_check {
+    healthy_threshold   = 2
+    interval            = 6
+    protocol            = "HTTP"
+    matcher             = "200-209"
+    timeout             = 5
+    unhealthy_threshold = 10
+  }
 }
 
 resource "aws_lb_listener" "http" {

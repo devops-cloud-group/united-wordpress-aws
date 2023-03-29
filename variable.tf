@@ -21,7 +21,7 @@ variable "public_subnet_1_cidr_block" {
 }
 
 variable "public_subnet_2_cidr_block" {
-default = "10.0.2.0/24"
+  default = "10.0.2.0/24"
 
 }
 variable "public_subnet_3_cidr_block" {

@@ -35,7 +35,7 @@ resource "aws_security_group" "frontend_app_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
- tags = {
+  tags = {
     Name = "created by Terraform"
   }
 }
@@ -72,6 +72,7 @@ resource "aws_security_group" "allow_RDS_sg" {
   }
 }
 
+
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr_block
   enable_dns_hostnames = true
@@ -79,7 +80,7 @@ resource "aws_vpc" "main" {
   tags = {
     Name = "TestVPC"
   }
-  }
+}
 
 
 
@@ -89,7 +90,7 @@ resource "aws_subnet" "public_subnet1" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.public_subnet_1_cidr_block
   map_public_ip_on_launch = true
-tags = {
+  tags = {
     Name = "public subnet1"
   }
 }
@@ -100,7 +101,7 @@ resource "aws_subnet" "public_subnet2" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.public_subnet_2_cidr_block
   map_public_ip_on_launch = true
-tags = {
+  tags = {
     Name = "public subnet2"
   }
 }
@@ -110,7 +111,7 @@ resource "aws_subnet" "public_subnet3" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.public_subnet_3_cidr_block
   map_public_ip_on_launch = true
-tags = {
+  tags = {
     Name = "public subnet3"
   }
 }
@@ -120,7 +121,7 @@ resource "aws_subnet" "private_subnet1" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.private_subnet_1_cidr_block
   map_public_ip_on_launch = false
-tags = {
+  tags = {
     Name = "private subnet1"
   }
 }
@@ -131,7 +132,7 @@ resource "aws_subnet" "private_subnet2" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.private_subnet_2_cidr_block
   map_public_ip_on_launch = false
-tags = {
+  tags = {
     Name = "private subnet2"
   }
 }
@@ -141,7 +142,7 @@ resource "aws_subnet" "private_subnet3" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.private_subnet_3_cidr_block
   map_public_ip_on_launch = false
-tags = {
+  tags = {
     Name = "private subnet3"
   }
 
@@ -156,16 +157,16 @@ resource "aws_internet_gateway" "igw" {
 
 
 resource "aws_eip" "eip1" {
-  
+
   depends_on = [aws_internet_gateway.igw]
 }
 
 resource "aws_eip" "eip2" {
-  
+
   depends_on = [aws_internet_gateway.igw]
 }
 resource "aws_eip" "eip3" {
-  
+
   depends_on = [aws_internet_gateway.igw]
 }
 
