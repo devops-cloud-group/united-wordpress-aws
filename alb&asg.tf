@@ -85,6 +85,12 @@ resource "aws_autoscaling_group" "server" {
 
 
 ##-------------------------------------------------------------------------------
+#resource "aws_lb_target_group_attachment" "asg_attachment" {
+ #   target_group_arn = aws_lb_target_group.server.arn
+ #   target_id        = aws_autoscaling_group.server.id
+  #  port             = 80
+  #}
+
 resource "aws_lb" "server" {
   name               = "WebServer-HighlyAvailable-ALB"
   load_balancer_type = "application"
