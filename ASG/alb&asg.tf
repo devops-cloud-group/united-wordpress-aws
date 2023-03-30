@@ -7,19 +7,19 @@
 #    - Application Load Balancer in 3 Availability Zones
 #    - Application Load Balancer TargetGroup
 #------------------------------------------------------------------
-data "aws_availability_zones" "available" {
-  state = "available"
-}
+# data "aws_availability_zones" "available" {
+#   state = "available"
+# }
 
-data "aws_ami" "latest_amazon_linux" {
-  owners      = ["137112412989"]
-  most_recent = true
+# data "aws_ami" "latest_amazon_linux" {
+#   owners      = ["137112412989"]
+#   most_recent = true
   
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
-}
+#   filter {
+#     name   = "name"
+#     values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+#   }
+# }
 #-------------------------------------------------------------------------------
 resource "aws_security_group" "server" {
   name   = "Web Security Group"
@@ -122,18 +122,18 @@ resource "aws_lb_target_group" "server" {
   }
 }
 
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.server.arn
-  port              = "80"
-  protocol          = "HTTP"
+# resource "aws_lb_listener" "http" {
+#   load_balancer_arn = aws_lb.server.arn
+#   port              = "80"
+#   protocol          = "HTTP"
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.server.arn
-  }
-}
+#   default_action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.server.arn
+#   }
+# }
 
 #-------------------------------------------------------------------------------
-output "web_loadbalancer_url" {
-  value = aws_lb.server.dns_name
-}
+# output "web_loadbalancer_url" {
+#   value = aws_lb.server.dns_name
+# }
