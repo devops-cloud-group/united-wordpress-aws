@@ -168,8 +168,7 @@ resource "aws_subnet" "private_subnets" {
 
 }
 
-
-  # Creates Route table for private subnets
+# Creates Route table for private subnets
 resource "aws_route_table" "private_subnets" {
   #The VPC ID
   count = length(var.private_subnet_cidr_block)
@@ -195,6 +194,5 @@ resource "aws_route_table_association" "private_routes" {
 
   #The ID of the routing table to associate with
   route_table_id =aws_route_table.private_subnets[count.index].id 
-  
-}
+  }
 
