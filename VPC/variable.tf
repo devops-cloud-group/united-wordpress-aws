@@ -1,26 +1,34 @@
 variable "tags" {
   type    = map(any)
   default = {}
-
-
 }
-
-
-variable "region" {}
-
 
 variable "key_name" {}
 
-
 variable "public_key" {}
 
-variable "vpc_cidr_block" {}
-variable "public_subnet_1_cidr_block" {}
-variable "public_subnet_2_cidr_block" {}
-variable "public_subnet_3_cidr_block" {}
-variable "private_subnet_1_cidr_block" {}
-variable "private_subnet_2_cidr_block" {}
-variable "private_subnet_3_cidr_block" {}
+variable "region" {}
+
+variable "vpc_cidr_block" {
+  default = "10.0.0.0/16"
+}
+
+variable "public_subnets" {
+  default = [
+    "10.0.1.0/24",
+    "10.0.2.0/24",
+    "10.0.3.0/24"
+    ]
+}
+
+variable "private_subnets" {
+  default = [
+    "10.0.11.0/24",
+    "10.0.12.0/24",
+    "10.0.13.0/24"
+    ]
+}
+
 
 
 
