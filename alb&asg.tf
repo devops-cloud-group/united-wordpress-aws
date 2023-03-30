@@ -61,7 +61,7 @@ resource "aws_security_group" "server" {
 resource "aws_launch_template" "server" {
   name                   = "WebServer-Highly-Available-LT"
   image_id               = data.aws_ami.latest_amazon_linux.id
-  instance_type          = "t3.micro"
+  instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.server.id]
   user_data = base64encode(file("user_data.sh"))
   lifecycle {
@@ -74,7 +74,7 @@ resource "aws_autoscaling_group" "server" {
 
   min_size                  = 1
   max_size                  = 99
-  desired_capacity          = 1
+  desired_capacity          = 2
   health_check_grace_period = 300
   health_check_type         = "ELB"
   vpc_zone_identifier = [aws_subnet.public_subnet2.id,

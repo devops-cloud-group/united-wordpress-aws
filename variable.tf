@@ -1,3 +1,12 @@
+variable "db_name" {
+  default = "dbserveron"
+}
+variable "db_user" {
+  default = "administrator"
+}
+variable "db_password" {
+  default = "my$qlser7We6"
+}
 variable "tags" {
 
   default = "created by Terraform"
