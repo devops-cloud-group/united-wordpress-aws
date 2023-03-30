@@ -26,6 +26,10 @@ override.tf.json
 # !example_override.tf
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
+<<<<<<< HEAD
 # example: *tfplan*
 */.DS_Store/*
 .DS_Store
+=======
+# example: *tfplan*
+>>>>>>> olia-asg-ec2
