@@ -10,15 +10,17 @@
 provider "aws" {
   region = var.region # Region specified in varible.tf file
 
-  default_tags {
-    tags = {
-      CreatedBy = "Terraform"
-    }
-  }
+  # default_tags {
+  #   tags = {
+  #     CreatedBy = "Terraform"
+  #   }
+  # }
 }
 
+# data "aws_availability_zones" "available" {}
 
-data "aws_availability_zones" "working" {}
+
+
 data "aws_ami" "latest_amazon_linux" {
   owners      = ["137112412989"]
   most_recent = true
@@ -32,7 +34,9 @@ data "aws_ami" "latest_amazon_linux" {
 #-------------------------------------------------------------------------------
 resource "aws_security_group" "web" {
   name   = "Web Security Group"
-  vpc_id = aws_vpc.main.id
+  vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id 
+  
+  
   dynamic "ingress" {
     for_each = ["80", "443"]
     content {
@@ -54,13 +58,13 @@ resource "aws_security_group" "web" {
 }
 
 #-------------------------------------------------------------------------------
-resource "aws_launch_template" "web" {
-  name                   = "WebServer-Highly-Available-LT"
-  image_id               = data.aws_ami.latest_amazon_linux.id
-  instance_type          = "t3.micro"
-  vpc_security_group_ids = [aws_security_group.web.id]
-  user_data              = filebase64("${path.module}/user_data.sh")
-}
+# resource "aws_launch_template" "web" {
+#   name                   = "WebServer-Highly-Available-LT"
+#   image_id               = data.aws_ami.latest_amazon_linux.id
+#   instance_type          = "t3.micro"
+#   vpc_security_group_ids = [aws_security_group.web.id]
+#   user_data              = filebase64("${path.module}/user_data.sh")
+# }
 
 resource "aws_autoscaling_group" "web" {
   name                = "WebServer-Highly-Available-ASG-Ver-${aws_launch_template.web.latest_version}"
