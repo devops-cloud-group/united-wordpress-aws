@@ -6,14 +6,7 @@ resource "aws_route53_record" "db_writer" {
   records = [aws_rds_cluster_instance.writer[0].endpoint]
 }
 
-data "aws_route53_zone" "selected" {
-  name = "krotiuk.com."
-}
 
-locals {
-  readers = length(aws_rds_cluster_instance.reader)
-  
-}
 
 resource "aws_route53_record" "reader" {
   count   = local.readers
