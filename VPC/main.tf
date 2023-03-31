@@ -40,36 +40,36 @@ resource "aws_security_group" "web" {
 
   tags = var.tags
 }
-# resource "aws_security_group" "allow_RDS_sg" {
-#   name        = "allow_RDS_sg"
-#   description = "Allow  MySQL Port inbound from Backend App Security Group and SSH "
-#   vpc_id      = aws_vpc.main.id
+resource "aws_security_group" "allow_RDS_sg" {
+  name        = "allow_RDS_sg"
+     description = "Allow  MySQL Port inbound from Backend App Security Group and SSH "
+   vpc_id      = aws_vpc.main.id
 
-#   ingress {
-#     description = "TLS from VPC"
-#     from_port   = 22
-#     to_port     = 22
-#     protocol    = "tcp"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-#   ingress {
-#     description = "TLS from VPC"
-#     from_port   = 3306
-#     to_port     = 3306
-#     protocol    = "tcp"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
+ ingress {
+    description = "TLS from VPC"
+     from_port   = 22
+     to_port     = 22
+     protocol    = "tcp"
+     cidr_blocks = ["0.0.0.0/0"]
+   }
+   ingress {
+     description = "TLS from VPC"
+     from_port   = 3306
+     to_port     = 3306
+     protocol    = "tcp"
+     cidr_blocks = ["0.0.0.0/0"]
+   }
 
 
 
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-#   tags = var.tags
-# }
+   egress {
+     from_port   = 0
+     to_port     = 0
+     protocol    = "-1"
+     cidr_blocks = ["0.0.0.0/0"]
+   }
+   tags = var.tags
+ }
 
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr_block
