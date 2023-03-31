@@ -1,5 +1,5 @@
 public_key = "~/.ssh/id_rsa.pub"
-region     = "eu-east-2"
+region     = "eu-west-2"
 key_name   = "laptop"
 
 tags = {

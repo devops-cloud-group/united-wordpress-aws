@@ -1,4 +1,4 @@
-terraform {
+erraform {
     backend "s3" {
         bucket = "terraform-tfstate-storage-wordpress"
         key    = "vpc/terraform.tfstate"
