@@ -13,3 +13,4 @@ sudo tar -xf wordpress-4.0.32.tar.gz -C /var/www/html/
 sudo mv /var/www/html/wordpress/* /var/www/html/
 sudo chown -R apache:apache /var/www/html/
 sudo systemctl restart httpd
+###
