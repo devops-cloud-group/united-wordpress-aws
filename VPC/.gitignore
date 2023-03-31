@@ -33,4 +33,3 @@ override.tf.json
 .terraformrc
 terraform.rc
 backend.tf
-VPC/backend.tf
