@@ -1,9 +1,17 @@
 # Local .terraform directories
 **/.terraform/*
+<<<<<<< HEAD
 .terraform.lock.hcl
 # .tfstate files
 *.tfstate
 *.tfstate.*
+=======
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+*.swp
+>>>>>>> hasan-asg-route53
 
 # Crash log files
 crash.log
@@ -27,5 +35,8 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
+<<<<<<< HEAD
 */.DS_Store/*
 .DS_Store
+=======
+>>>>>>> hasan-asg-route53
