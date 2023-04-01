@@ -41,7 +41,7 @@ resource "aws_rds_cluster_instance" "writer" {
 
 resource "aws_rds_cluster_instance" "reader" {
   count                      = 3
-  identifier                 = "example-reader-${count.index}"
+  identifier                 = "example-reader-${count.index+1}"
   cluster_identifier         = aws_rds_cluster.default.id
   instance_class             = "db.r5.large"
   engine                     = "aurora-mysql"
