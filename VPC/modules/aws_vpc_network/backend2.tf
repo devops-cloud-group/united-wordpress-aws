@@ -3,6 +3,6 @@ terraform {
     bucket         = "company-wide-tfstate-storage-vpc-group"
     key            = "devops/aws/team/key"
     region         = "us-east-1"
-    dynamodb_table = "company-wide-tfstate-vpc-group"
+    dynamodb_table = "company-wide-tfstate-vpc"
   }
 }
