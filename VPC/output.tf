@@ -27,5 +27,10 @@ output "public_subnet_cidrs" {
   value = aws_subnet.public_subnets[*].cidr_block
 }
 
+output "security_group_web_id" {
+  value = aws_security_group.web.id
+}
 
-
+output "security_group_mysql_id" {
+  value = aws_security_group.mysql.id
+}
