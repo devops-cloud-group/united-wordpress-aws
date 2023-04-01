@@ -8,3 +8,10 @@ output "vpc_id" {
 }
 
 
+output "public_subnets_ids" {
+  value = var.public_subnet_cidr_block
+}
+
+output "private_subnets_ids" {
+  value = var.private_subnet_cidr_block
+}
