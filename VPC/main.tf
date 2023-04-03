@@ -78,54 +78,126 @@ resource "aws_vpc" "main" {
   tags                 = var.tags
 }
 
-resource "aws_subnet" "public_subnets" {
-  count = length(data.aws_availability_zones.available.names)
-  # count = length(aws_subnet.public_subnets[*].id)
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
+resource "aws_subnet" "public_subnet1" {
+  availability_zone       = data.aws_availability_zones.available.names[0]
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = element(var.public_subnets, count.index)
+  cidr_block              = var.public_subnet_1_cidr_block
   map_public_ip_on_launch = true
   tags = {
-    Name  = "public-${count.index + 1}"
+    Name  = "pub-sub1"
 }
 }
 
 
-resource "aws_subnet" "private_subnets" {
-  count = length(data.aws_availability_zones.available.names)
+resource "aws_subnet" "public_subnet2" {
+  availability_zone       = data.aws_availability_zones.available.names[1]
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = element(var.private_subnets, count.index)
-  map_public_ip_on_launch = false
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  cidr_block              = var.public_subnet_2_cidr_block
+  map_public_ip_on_launch = true
+  
+ tags = {
+    Name  = "pub-sub2"
+}
  
-  tags = {
-    Name  = "private-${count.index + 1}"
+}
+
+resource "aws_subnet" "public_subnet3" {
+  availability_zone       = data.aws_availability_zones.available.names[2]
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.public_subnet_3_cidr_block
+  map_public_ip_on_launch = true
+  
+ tags = {
+    Name  = "pub-sub3"
+}
+}
+
+resource "aws_subnet" "private_subnet1" {
+  availability_zone       = data.aws_availability_zones.available.names[0]
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.private_subnet_1_cidr_block
+  map_public_ip_on_launch = false
+  
+ tags = {
+    Name  = "private-sub1"
+}
+}
+resource "aws_subnet" "private_subnet2" {
+  availability_zone       = data.aws_availability_zones.available.names[1]
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.private_subnet_2_cidr_block
+  map_public_ip_on_launch = false
+  
+ tags = {
+    Name  = "private-sub2"
+}
+}
+
+resource "aws_subnet" "private_subnet3" {
+  availability_zone       = data.aws_availability_zones.available.names[2]
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.private_subnet_3_cidr_block
+  map_public_ip_on_launch = false
+  
+ tags = {
+    Name  = "private-sub3"
 }
 }
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
-  tags   = var.tags
+ 
 }
 
-resource "aws_eip" "eip" {
-  count = length(aws_subnet.public_subnets[*].id)
+resource "aws_eip" "eip1" {
   depends_on = [aws_internet_gateway.igw]
    tags = {
-    Name  = "NAT-${count.index + 1}-ElasticIP"
+    Name  = "nat-eip-1"
 }
 }
 
+resource "aws_eip" "eip2" {
+  depends_on = [aws_internet_gateway.igw]
+   tags = {
+    Name  = "nat-eip-2"
+}
+}
+resource "aws_eip" "eip3" {
+  depends_on = [aws_internet_gateway.igw]
+   tags = {
+    Name  = "nat-eip-3"
+}
+}
 //Created natgw for internet access to my private instances
 
-resource "aws_nat_gateway" "nat_gw" {
-  count = length(aws_subnet.public_subnets[*].id)
-  allocation_id = element(aws_eip.eip[*].id,count.index)
-  subnet_id     = element(aws_subnet.public_subnets[*].id, count.index)
+resource "aws_nat_gateway" "nat_gw1" {
+  
+  allocation_id = aws_eip.eip1.id
+  subnet_id     = aws_subnet.public_subnet1.id
   tags = {
-    Name  = "NAT GW-${count.index + 1}"
+    Name  = "nat-gw-1"
 }
 }
+
+
+resource "aws_nat_gateway" "nat_gw2" {
+  
+  allocation_id = aws_eip.eip2.id
+  subnet_id     = aws_subnet.public_subnet2.id
+  tags = {
+    Name  = "nat-gw-2"
+}
+}
+
+resource "aws_nat_gateway" "nat_gw3" {
+  
+  allocation_id = aws_eip.eip3.id
+  subnet_id     = aws_subnet.public_subnet3.id
+  tags = {
+    Name  = "nat-gw-3"
+}
+}
+
 
 resource "aws_route_table" "public" {
   #The VPC ID
@@ -140,34 +212,92 @@ resource "aws_route_table" "public" {
 
 }
 
-resource "aws_route_table" "private" {
-  count = length(aws_subnet.private_subnets[*].id)
+resource "aws_route_table" "private1" {
+  
   #The VPC ID
   vpc_id = aws_vpc.main.id
 
   route {
     # The CIDR block of the route
-    cidr_block = "0.0.0.0/0"
+    cidr_block = "0.0.0.0/0" 
     #Identifier of a VPC  NAT gateway
-    nat_gateway_id = element(aws_nat_gateway.nat_gw[*].id,count.index)
+    nat_gateway_id = aws_nat_gateway.nat_gw1.id
   }
 
 }
 
-resource "aws_route_table_association" "public" {
-  count = length(aws_subnet.public_subnets[*].id)
-  #The subnet ID to create an association
-  subnet_id = element(aws_subnet.public_subnets[*].id, count.index)
-  #The ID of the routing table to associate with
-  route_table_id = element(aws_route_table.public[*].id, count.index)
+resource "aws_route_table" "private2" {
+  
+  #The VPC ID
+  vpc_id = aws_vpc.main.id
+
+  route {
+    # The CIDR block of the route
+    cidr_block = "0.0.0.0/0" 
+    #Identifier of a VPC  NAT gateway
+    nat_gateway_id = aws_nat_gateway.nat_gw2.id
+  }
+
 }
 
-resource "aws_route_table_association" "private" {
-  count = length(aws_subnet.private_subnets[*].id)
+resource "aws_route_table" "private3" {
+  
+  #The VPC ID
+  vpc_id = aws_vpc.main.id
+
+  route {
+    # The CIDR block of the route
+    cidr_block = "0.0.0.0/0" 
+    #Identifier of a VPC  NAT gateway
+    nat_gateway_id = aws_nat_gateway.nat_gw3.id
+  }
+
+}
+
+
+resource "aws_route_table_association" "public1" {
   #The subnet ID to create an association
-  subnet_id = element(aws_subnet.private_subnets[*].id, count.index)
+  subnet_id = aws_subnet.public_subnet1.id
   #The ID of the routing table to associate with
-  route_table_id = element(aws_route_table.private[*].id,count.index)
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "public2" {
+  #The subnet ID to create an association
+  subnet_id = aws_subnet.public_subnet2.id
+  #The ID of the routing table to associate with
+  route_table_id = aws_route_table.public.id
+}
+
+
+resource "aws_route_table_association" "public3" {
+  #The subnet ID to create an association
+  subnet_id = aws_subnet.public_subnet3.id
+  #The ID of the routing table to associate with
+  route_table_id = aws_route_table.public.id
+}
+
+
+
+resource "aws_route_table_association" "private1" {
+  #The subnet ID to create an association
+  subnet_id = aws_subnet.private_subnet1.id
+  #The ID of the routing table to associate with
+  route_table_id = aws_route_table.private1.id
+}
+
+resource "aws_route_table_association" "private2" {
+  #The subnet ID to create an association
+  subnet_id = aws_subnet.private_subnet2.id
+  #The ID of the routing table to associate with
+  route_table_id = aws_route_table.private2.id
+}
+
+resource "aws_route_table_association" "private3" {
+  #The subnet ID to create an association
+  subnet_id = aws_subnet.private_subnet3.id
+  #The ID of the routing table to associate with
+  route_table_id = aws_route_table.private3.id
 }
 
 
