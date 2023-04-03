@@ -28,4 +28,13 @@ output "public_subnet_cidrs" {
 }
 
 
+output "allow_RDS_sg" {
+  value = aws_security_group.allow_RDS_sg.name
+}
+
+
+output "private_subnets" {
+
+ value = aws_subnet.private_subnets[*].id
+}
 

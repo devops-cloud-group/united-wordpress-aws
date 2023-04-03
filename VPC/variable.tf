@@ -32,13 +32,3 @@ variable "private_subnets" {
 
 
 
-
-
-data "aws_route53_zone" "selected" {
-  name = "krotiuk.com."
-}
-
-locals {
-  readers = length(aws_rds_cluster_instance.reader)
-  
-}
