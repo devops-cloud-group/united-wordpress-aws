@@ -41,8 +41,8 @@ resource "aws_security_group" "web" {
   tags = var.tags
 }
 resource "aws_security_group" "allow_RDS_sg" {
-   name        = "allow_RDS_sg"
-   description = "Allow  MySQL Port inbound from Backend App Security Group and SSH "
+  name        = "allow_RDS_sg"
+     description = "Allow  MySQL Port inbound from Backend App Security Group and SSH "
    vpc_id      = aws_vpc.main.id
 
  ingress {

@@ -66,7 +66,8 @@ resource "aws_autoscaling_group" "web" {
   max_size            = 2
   min_elb_capacity    = 2
   health_check_type   = "ELB"
-  vpc_zone_identifier = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
+  vpc_zone_identifier = [aws_subnet.public_subnet1.id,
+  aws_subnet.public_subnet2.id, aws_subnet.public_subnet3.id]
   target_group_arns   = [aws_lb_target_group.web.arn]
 
   launch_template {
@@ -95,12 +96,13 @@ resource "aws_lb" "web" {
   name               = "WebServer-HighlyAvailable-ALB"
   load_balancer_type = "application"
   security_groups    = [aws_security_group.web.id]
-  subnets            = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
+  subnets            = [aws_subnet.public_subnet2.id,
+  aws_subnet.public_subnet1.id, aws_subnet.public_subnet3.id]
 }
 
 resource "aws_lb_target_group" "web" {
   name                 = "WebServer-HighlyAvailable-TG"
-  vpc_id               = aws_default_vpc.default.id
+  vpc_id               = data.terraform_remote_state.vpc.outputs.vpc_id 
   port                 = 80
   protocol             = "HTTP"
   deregistration_delay = 10 # seconds

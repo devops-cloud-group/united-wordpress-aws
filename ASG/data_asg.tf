@@ -6,20 +6,20 @@ data "aws_availability_zones" "available" {
 data "terraform_remote_state" "vpc" {
     backend = "s3" 
     config = {
-        bucket = "terraform-tfstate-storage-wordpress"
-        key    = "vpc/terraform.tfstate"
-        region = "us-west-1"
-        dynamodb_table = "terraform-state-lock"
+    bucket         = "company-wide-tfstate-storage-vpc-group"
+    key            = "devops/aws/team/key"
+    region         = "us-east-1"
+    dynamodb_table = "company-wide-tfstate-vpc"
     } 
 }
 
 data "terraform_remote_state" "asg" {
     backend = "s3" 
     config = {
-        bucket = "terraform-tfstate-storage-wordpress"
-        key    = "asg/terraform.tfstate"
-        region = "us-west-1"
-        dynamodb_table = "terraform-state-lock"
+    bucket         = "company-wide-tfstate-storage-vpc-group"
+    key            = "devops/aws/team/key"
+    region         = "us-east-1"
+    dynamodb_table = "company-wide-tfstate-vpc"
     } 
 }
 

@@ -77,8 +77,8 @@ resource "aws_autoscaling_group" "server" {
   desired_capacity          = 1
   health_check_grace_period = 300
   health_check_type         = "ELB"
-  vpc_zone_identifier = [aws_subnet.public_subnet2.id,
-  aws_subnet.public_subnet1.id, aws_subnet.public_subnet3.id]
+  vpc_zone_identifier = [aws_subnet.public_subnet1.id,
+  aws_subnet.public_subnet2.id, aws_subnet.public_subnet3.id]
   target_group_arns = [aws_lb_target_group.server.arn]
 
   launch_template {
