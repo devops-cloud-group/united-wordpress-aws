@@ -1,10 +1,14 @@
 
-
-
 resource "aws_db_subnet_group" "example" {
-  name       = "example-db-subnet-group"
-  subnet_ids = var.private_subnets
+  name        = "my-db-subnet-group"
+  description = "Subnet group for my RDS instance"
+  subnet_ids  = [
+    aws_subnet.private_subnet1.id,
+    aws_subnet.private_subnet2.id,
+    aws_subnet.private_subnet3.id
+  ]
 }
+
 
 resource "random_password" "db_master_password" {
   length = 16
@@ -21,8 +25,9 @@ resource "aws_rds_cluster" "default" {
   backup_retention_period = 5
   preferred_backup_window = "07:00-09:00"
   skip_final_snapshot       = true
-  vpc_security_group_ids   = [var.allow_RDS_sg]
+  vpc_security_group_ids   = [aws_security_group.allow_RDS_sg.id]
   db_subnet_group_name = aws_db_subnet_group.example.name
+  
 
   
   tags = {
