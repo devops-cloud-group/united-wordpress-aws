@@ -14,10 +14,20 @@ module "ohio_vpc" {
   private_subnet_3_cidr_block = "10.100.6.0/24"
 }
 
-module "ohio_RDS"{
-  source = "../../RDS"
-  vpc_id = module.ohio_vpc.vpc_id
-  allow_RDS_sg = module.ohio_vpc.allow_RDS_sg
- subnet_ids = module.ohio_vpc.subnet_ids
-}
+# module "ohio_RDS"{
+#   source = "../../RDS"
+#   vpc_id = module.ohio_vpc.vpc_id
+#   allow_RDS_sg = module.ohio_vpc.allow_RDS_sg
+#  subnet_ids = module.ohio_vpc.subnet_ids
+# }
 
+module "ohio_asg_alb"{
+  source = "../../ASG"
+  vpc_id = module.ohio_vpc.vpc_id
+  vpc_cidr_block = "10.100.0.0/16"
+  public_key     = "~/.ssh/id_rsa.pub"
+  region         = "us-east-2"
+  key_name       = "state-vpc-key"
+  public_subnets = module.ohio_vpc.public_subnets
+ 
+}

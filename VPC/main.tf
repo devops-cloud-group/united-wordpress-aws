@@ -3,6 +3,7 @@ provider "aws" {
   region = var.region
 }
 
+/*
 resource "aws_security_group" "web" {
   name        = "frontend_app_sg"
   description = "Allow SSH , HTTP and HTTPS inbound  from Frontend app"
@@ -40,6 +41,8 @@ resource "aws_security_group" "web" {
 
   tags = var.tags
 }
+
+*/
 resource "aws_security_group" "allow_RDS_sg" {
    name        = "allow_RDS_sg"
    description = "Allow  MySQL Port inbound from Backend App Security Group and SSH "

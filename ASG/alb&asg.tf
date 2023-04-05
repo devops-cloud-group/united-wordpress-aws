@@ -23,7 +23,7 @@
 #-------------------------------------------------------------------------------
 resource "aws_security_group" "server" {
   name   = "Web Security Group"
-  vpc_id = aws_vpc.main.id
+  vpc_id = var.vpc_id
 
   ingress {
     from_port   = 80
@@ -63,7 +63,7 @@ resource "aws_launch_template" "server" {
   image_id               = data.aws_ami.latest_amazon_linux.id
   instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.server.id]
-  user_data = base64encode(file("user_data.sh"))
+  user_data = base64encode(file("${path.module}/user_data.sh"))
   lifecycle {
     create_before_destroy = true
     
@@ -77,8 +77,7 @@ resource "aws_autoscaling_group" "server" {
   desired_capacity          = 1
   health_check_grace_period = 300
   health_check_type         = "ELB"
-  vpc_zone_identifier = [aws_subnet.public_subnet1.id,
-  aws_subnet.public_subnet2.id, aws_subnet.public_subnet3.id]
+  vpc_zone_identifier = var.public_subnets
   target_group_arns = [aws_lb_target_group.server.arn]
 
   launch_template {
@@ -104,13 +103,12 @@ resource "aws_lb" "server" {
   name               = "WebServer-HighlyAvailable-ALB"
   load_balancer_type = "application"
   security_groups    = [aws_security_group.server.id]
-  subnets = [aws_subnet.public_subnet2.id,
-  aws_subnet.public_subnet1.id, aws_subnet.public_subnet3.id]
+  subnets = var.public_subnets
 }
 
 resource "aws_lb_target_group" "server" {
   name                 = "WebServer-HighlyAvailable-TG"
-  vpc_id               = aws_vpc.main.id
+  vpc_id               = var.vpc_id
   port                 = 80
   protocol             = "HTTP"
   deregistration_delay = 10 # seconds
@@ -122,16 +120,16 @@ resource "aws_lb_target_group" "server" {
   }
 }
 
-# resource "aws_lb_listener" "http" {
-#   load_balancer_arn = aws_lb.server.arn
-#   port              = "80"
-#   protocol          = "HTTP"
+resource "aws_lb_listener" "http2" {
+  load_balancer_arn = aws_lb.server.arn
+  port              = "80"
+  protocol          = "HTTP"
 
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.server.arn
-#   }
-# }
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.server.arn
+  }
+}
 
 #-------------------------------------------------------------------------------
 # output "web_loadbalancer_url" {

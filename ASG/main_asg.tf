@@ -27,8 +27,8 @@ data "aws_ami" "latest_amazon_linux" {
 
 #-------------------------------------------------------------------------------
 resource "aws_security_group" "web" {
-  name   = "Web Security Group"
-  vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id 
+  name   = "Web Security Group2"
+  vpc_id = var.vpc_id
   
   
   dynamic "ingress" {
@@ -47,62 +47,61 @@ resource "aws_security_group" "web" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "Web Security Group"
+    Name = "Web Security Group2"
   }
 }
 
-#-------------------------------------------------------------------------------
-# resource "aws_launch_template" "web" {
-#   name                   = "WebServer-Highly-Available-LT"
+
+
+#  resource "aws_launch_template" "web" {
+#   name                   = "WebServer-Highly-Available-LT2"
 #   image_id               = data.aws_ami.latest_amazon_linux.id
 #   instance_type          = "t3.micro"
 #   vpc_security_group_ids = [aws_security_group.web.id]
 #   user_data              = filebase64("${path.module}/user_data.sh")
 # }
 
-resource "aws_autoscaling_group" "web" {
-  name                = "WebServer-Highly-Available-ASG-Ver-${aws_launch_template.web.latest_version}"
-  min_size            = 2
-  max_size            = 2
-  min_elb_capacity    = 2
-  health_check_type   = "ELB"
-  vpc_zone_identifier = [aws_subnet.public_subnet1.id,
-  aws_subnet.public_subnet2.id, aws_subnet.public_subnet3.id]
-  target_group_arns   = [aws_lb_target_group.web.arn]
+# resource "aws_autoscaling_group" "web" {
+#   name                = "WebServer-Highly-Available-ASG-Ver2-${aws_launch_template.web.latest_version}"
+#   min_size            = 2
+#   max_size            = 2
+#   min_elb_capacity    = 2
+#   health_check_type   = "ELB"
+#   vpc_zone_identifier = var.public_subnets
+#   target_group_arns   = [aws_lb_target_group.web.arn]
 
-  launch_template {
-    id      = aws_launch_template.web.id
-    version = aws_launch_template.web.latest_version
-  }
+#   launch_template {
+#     id      = aws_launch_template.web.id
+#     version = aws_launch_template.web.latest_version
+#   }
 
-  dynamic "tag" {
-    for_each = {
-      Name   = "WebServer in ASG-v${aws_launch_template.web.latest_version}"
-      TAGKEY = "TAGVALUE"
-    }
-    content {
-      key                 = tag.key
-      value               = tag.value
-      propagate_at_launch = true
-    }
-  }
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+  # dynamic "tag" {
+  #   for_each = {
+  #     Name   = "WebServer in ASG-v${aws_launch_template.web.latest_version}"
+  #     TAGKEY = "TAGVALUE"
+  #   }
+  #   content {
+  #     key                 = tag.key
+  #     value               = tag.value
+  #     propagate_at_launch = true
+  #   }
+  # }
+  # lifecycle {
+  #   create_before_destroy = true
+  # }
+
 
 #-------------------------------------------------------------------------------
 resource "aws_lb" "web" {
-  name               = "WebServer-HighlyAvailable-ALB"
+  name               = "WebServer-HighlyAvailable-ALB2"
   load_balancer_type = "application"
   security_groups    = [aws_security_group.web.id]
-  subnets            = [aws_subnet.public_subnet2.id,
-  aws_subnet.public_subnet1.id, aws_subnet.public_subnet3.id]
+  subnets            = var.public_subnets
 }
 
 resource "aws_lb_target_group" "web" {
-  name                 = "WebServer-HighlyAvailable-TG"
-  vpc_id               = data.terraform_remote_state.vpc.outputs.vpc_id 
+  name                 = "WebServer-HighlyAvailable-TG2"
+  vpc_id               = var.vpc_id
   port                 = 80
   protocol             = "HTTP"
   deregistration_delay = 10 # seconds
@@ -120,6 +119,6 @@ resource "aws_lb_listener" "http" {
 }
 
 #-------------------------------------------------------------------------------
-output "web_loadbalancer_url" {
-  value = aws_lb.web.dns_name
-}
+# output "web_loadbalancer_url" {
+#   value = aws_lb.web.dns_name
+# }

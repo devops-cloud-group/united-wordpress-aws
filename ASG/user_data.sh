@@ -8,6 +8,7 @@ sudo yum install php -y
 sudo systemctl restart httpd
 sudo systemctl enable httpd
 sudo yum install wget -y
+sudo yum install php-mysql -y
 sudo wget https://wordpress.org/wordpress-4.0.32.tar.gz
 sudo tar -xf wordpress-4.0.32.tar.gz -C /var/www/html/
 sudo mv /var/www/html/wordpress/* /var/www/html/

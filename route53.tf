@@ -1,3 +1,4 @@
+/*
 resource "aws_route53_record" "db" {
   zone_id = "Z075475021FQFGI800HB6"
   name    = "wordpressdb.azimbaev.link"
@@ -17,3 +18,4 @@ output "name" {
 output "records" {
   value = aws_route53_record.db.records
 }
+*/

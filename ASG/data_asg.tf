@@ -24,14 +24,14 @@ data "terraform_remote_state" "asg" {
 }
 
 
-data "aws_security_groups" "test" {
+# data "aws_security_groups" "test" {
 
-  filter {
-    name   = "Wordpress-VPC"
-    values = [data.terraform_remote_state.asg.outputs.vpc_id]
-  }
-}
+#   filter {
+#     name   = "Wordpress-VPC"
+#     values = [var.vpc_id]
+#   }
+# }
 
-output "aws_security_groups" {
-    value = data.aws_security_groups.test[*]
-}
+# output "aws_security_groups" {
+#     value = data.aws_security_groups.test[*]
+# }
