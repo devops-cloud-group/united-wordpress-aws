@@ -14,12 +14,10 @@ module "ohio_vpc" {
   private_subnet_3_cidr_block = "10.100.6.0/24"
 }
 
-module "ohio_asg"{
+module "ohio_RDS"{
   source = "../../RDS"
-   private_subnet_ids = module.ohio_vpc.private_subnets
   vpc_id = module.ohio_vpc.vpc_id
- allow_RDS_sg = module.ohio_vpc.allow_RDS_sg
-private_subnets = module.ohio_vpc.private_subnets
-subnet_ids = module.ohio_vpc.subnet_ids
+  allow_RDS_sg = module.ohio_vpc.allow_RDS_sg
+ subnet_ids = module.ohio_vpc.subnet_ids
 }
 

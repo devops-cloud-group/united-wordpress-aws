@@ -1,13 +1,6 @@
 variable "vpc_id" {}
 
-variable "private_subnet_ids" {
-  type = list(any)
-  
-}
 
-variable "private_subnets"{
-
-}
 
 
 variable "allow_RDS_sg" {
@@ -25,7 +18,7 @@ variable "example" {
 }
 
 variable "subnet_ids" {
-  
+  type = list(string)
 }
 
 

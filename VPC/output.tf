@@ -21,11 +21,11 @@ output "private_subnets" {
 }
 
 output "allow_RDS_sg" {
-  value = aws_security_group.allow_RDS_sg.name
+  value = aws_security_group.allow_RDS_sg.id
 }
 
 output "subnet_ids" {
-  value = [aws_subnet.private_subnet1,
-  aws_subnet.private_subnet2,
-  aws_subnet.private_subnet3]
+  value = [aws_subnet.private_subnet1.id,
+  aws_subnet.private_subnet2.id,
+  aws_subnet.private_subnet3.id]
 }
