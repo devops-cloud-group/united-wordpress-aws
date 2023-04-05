@@ -16,11 +16,19 @@ build-singapore:
 destroy-singapore:
 	terraform workspace new singapore 	|| terraform workspace select singapore  && terraform init &&  		terraform  destroy   -var-file envs/regions/ap-southeast-1/singapore.tfvars --auto-approve
 
+<<<<<<< HEAD
 build-california:
 	terraform workspace new california 	|| terraform workspace select california  && terraform init &&  terraform  apply   -var-file envs/regions/us-west-1/prod.tfvars 
 
 destroy-california:
 	terraform workspace new california 	|| terraform workspace select california  && terraform init &&  terraform  destroy   -var-file  envs/regions/us-west-1/prod.tfvars --auto-approve
+=======
+build-cali:
+	terraform workspace new cali 	|| terraform workspace select cali  && terraform init &&  terraform  apply   -var-file envs/regions/us-west-2/prod.tfvars --auto-approve
+
+destroy-cali:
+	terraform workspace new cali 	|| terraform workspace select cali  && terraform init &&  terraform  destroy   -var-file  envs/regions/us-west-2/prod.tfvars --auto-approve
+>>>>>>> main
 
 build-europe:
 	terraform workspace new europe 	|| terraform workspace select europe  && terraform init &&  terraform  apply   -var-file envs/regions/eu-east-2/prod.tfvars --auto-approve
