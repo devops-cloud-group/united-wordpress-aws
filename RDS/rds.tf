@@ -1,14 +1,16 @@
 
 
-
-resource "aws_db_subnet_group" "example" {
-  name       = "example-db-subnet-group"
-  subnet_ids = var.private_subnets
+  resource "aws_db_subnet_group" "example" {
+  name        = "my-db-subnet-group"
+  description = "Subnet group for my RDS instance"
+  subnet_ids  = var.subnet_ids
 }
+    
+
 
 resource "random_password" "db_master_password" {
   length = 16
-  special = true
+  special = false
 }
 
 resource "aws_rds_cluster" "default" {
@@ -23,6 +25,8 @@ resource "aws_rds_cluster" "default" {
   skip_final_snapshot       = true
   vpc_security_group_ids   = [var.allow_RDS_sg]
   db_subnet_group_name = aws_db_subnet_group.example.name
+   availability_zones = data.aws_availability_zones.available.names
+  
 
   
   tags = {
@@ -53,4 +57,3 @@ resource "aws_rds_cluster_instance" "reader" {
     Name = "example-reader-${count.index}"
   }
 }
-

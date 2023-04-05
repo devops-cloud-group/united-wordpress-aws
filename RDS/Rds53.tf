@@ -1,3 +1,5 @@
+
+
 resource "aws_route53_record" "db_writer" {
   zone_id = data.aws_route53_zone.selected.zone_id
   name    = "writer"
@@ -19,10 +21,12 @@ resource "aws_route53_record" "reader" {
 
 
 
-data "aws_route53_zone" "selected" {
-  name = "krotiuk.com."
-}
-
 locals {
   readers = length(aws_rds_cluster_instance.reader)
   }
+
+
+
+data "aws_route53_zone" "selected" {
+  name = "krotiuk.com"
+}
