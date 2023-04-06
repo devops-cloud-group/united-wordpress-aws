@@ -36,7 +36,12 @@ $ export TF_VAR_domain_name=domain.com
 
 ```shell 
 $ export AWS_ACCESS_KEY_ID={Your AWS_ACCESS_KEY_ID} 
-$ export AWS_SECRET_ACCESS_KEY={Your AWS_SECRET_ACCESS_KEY} Terraform installed. Required version >= 1.1.1
+$ export AWS_SECRET_ACCESS_KEY={Your AWS_SECRET_ACCESS_KEY} 
+
+OUTPUT:
+
+Terraform installed. 
+Required version >= 1.1.1
 ```
 
 ##  Remote Backend
