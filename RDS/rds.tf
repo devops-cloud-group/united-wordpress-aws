@@ -1,7 +1,12 @@
-resource "aws_db_subnet_group" "example" {
-  name       = "example-db-subnet-group"
-  subnet_ids = aws_subnet.private_subnets.*.id
+
+
+  resource "aws_db_subnet_group" "example" {
+  name        = "my-db-subnet-group"
+  description = "Subnet group for my RDS instance"
+  subnet_ids  = var.subnet_ids
 }
+    
+
 
 resource "random_password" "db_master_password" {
   length = 16
@@ -14,12 +19,14 @@ resource "aws_rds_cluster" "default" {
   engine_version          = "5.7.mysql_aurora.2.07.2"
   database_name           = "mydb"
   master_username         = "foo"
-  master_password         = random_password.db_master_password.result
+  master_password         = "adminkrotiuk"
   backup_retention_period = 5
   preferred_backup_window = "07:00-09:00"
   skip_final_snapshot       = true
-  vpc_security_group_ids   = [aws_security_group.allow_RDS_sg.id]
+  vpc_security_group_ids   = [var.allow_RDS_sg]
   db_subnet_group_name = aws_db_subnet_group.example.name
+   availability_zones = data.aws_availability_zones.available.names
+  
 
   
   tags = {
@@ -50,4 +57,12 @@ resource "aws_rds_cluster_instance" "reader" {
     Name = "example-reader-${count.index}"
   }
 }
+
+
+
+
+
+
+
+
 

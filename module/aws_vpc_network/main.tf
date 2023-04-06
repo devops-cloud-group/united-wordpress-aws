@@ -3,7 +3,6 @@ provider "aws" {
   region = var.region
 }
 
-/*
 resource "aws_security_group" "web" {
   name        = "frontend_app_sg"
   description = "Allow SSH , HTTP and HTTPS inbound  from Frontend app"
@@ -41,47 +40,36 @@ resource "aws_security_group" "web" {
 
   tags = var.tags
 }
-<<<<<<< HEAD
-
-*/
 resource "aws_security_group" "allow_RDS_sg" {
-   name        = "allow_RDS_sg"
-   description = "Allow  MySQL Port inbound from Backend App Security Group and SSH "
-   vpc_id      = aws_vpc.main.id
-=======
-resource "aws_security_group" "mysql" {
   name        = "allow_RDS_sg"
-  description = "Allow  MySQL Port inbound from Backend App Security Group and SSH "
-  vpc_id      = aws_vpc.main.id
->>>>>>> main
+     description = "Allow  MySQL Port inbound from Backend App Security Group and SSH "
+   vpc_id      = aws_vpc.main.id
 
-  # ingress {
-  #   description = "TLS from VPC"
-  #   from_port   = 22
-  #   to_port     = 22
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-  ingress {
-    description = "mysql"
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "tcp"
-    #TODO: change this to the security group of the mysql server
-    cidr_blocks = ["0.0.0.0/0"]
-    # cidr_blocks = ["10.0.11.0/24"]
-  }
+ ingress {
+    description = "TLS from VPC"
+     from_port   = 22
+     to_port     = 22
+     protocol    = "tcp"
+     cidr_blocks = ["0.0.0.0/0"]
+   }
+   ingress {
+     description = "TLS from VPC"
+     from_port   = 3306
+     to_port     = 3306
+     protocol    = "tcp"
+     cidr_blocks = ["0.0.0.0/0"]
+   }
 
 
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = var.tags
-}
+   egress {
+     from_port   = 0
+     to_port     = 0
+     protocol    = "-1"
+     cidr_blocks = ["0.0.0.0/0"]
+   }
+   tags = var.tags
+ }
 
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr_block
@@ -90,15 +78,8 @@ resource "aws_vpc" "main" {
   tags                 = var.tags
 }
 
-<<<<<<< HEAD
 resource "aws_subnet" "public_subnet1" {
   availability_zone       = data.aws_availability_zones.available.names[0]
-=======
-resource "aws_subnet" "public_subnets" {
-  #count = length(data.aws_availability_zones.available.names)
-  count = 3
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
->>>>>>> main
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.public_subnet_1_cidr_block
   map_public_ip_on_launch = true
@@ -108,14 +89,8 @@ resource "aws_subnet" "public_subnets" {
 }
 
 
-<<<<<<< HEAD
 resource "aws_subnet" "public_subnet2" {
   availability_zone       = data.aws_availability_zones.available.names[1]
-=======
-resource "aws_subnet" "private_subnets" {
-  #count = length(data.aws_availability_zones.available.names)
-  count = 3
->>>>>>> main
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.public_subnet_2_cidr_block
   map_public_ip_on_launch = true

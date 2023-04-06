@@ -1,3 +1,26 @@
+<<<<<<< HEAD
+variable "vpc_id" {}
+
+
+
+
+variable "allow_RDS_sg" {
+}
+
+
+# Declare the data source
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+variable "example" {
+  type    = string
+  default = "example"
+}
+
+variable "subnet_ids" {
+  type = list(string)
+=======
 variable "tags" {
   type    = map(any)
   default = {}
@@ -36,10 +59,14 @@ variable "private_subnets" {
     "10.0.12.0/24",
     "10.0.13.0/24"
     ]
+>>>>>>> main
 }
 
 
 
+<<<<<<< HEAD
+=======
 
 
 
+>>>>>>> main

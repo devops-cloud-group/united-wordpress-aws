@@ -9,6 +9,10 @@ variable "public_key" {}
 
 variable "region" {}
 
+<<<<<<< HEAD
+variable "vpc_cidr_block" {}
+    
+=======
 # variable "vpc_id" {}
 
 # variable "aws_security_group" {
@@ -21,33 +25,22 @@ variable "region" {}
 variable "vpc_cidr_block" {
   default = "10.0.0.0/16"
 }
+>>>>>>> main
 
-variable "public_subnets" {
-  default = [
-    "10.0.1.0/24",
-    "10.0.2.0/24",
-    "10.0.3.0/24"
-    ]
-}
-
-variable "private_subnets" {
-  default = [
-    "10.0.11.0/24",
-    "10.0.12.0/24",
-    "10.0.13.0/24"
-    ]
-}
-
-
-
-
-
-
-data "aws_route53_zone" "selected" {
-  name = "krotiuk.com."
-}
-
-locals {
-  readers = length(aws_rds_cluster_instance.reader)
+variable "public_subnet_1_cidr_block" {}
   
-}
+variable "public_subnet_2_cidr_block" {}
+  
+variable "public_subnet_3_cidr_block" {}
+  
+
+variable "private_subnet_1_cidr_block" {}
+  
+variable "private_subnet_2_cidr_block" {}
+  
+variable "private_subnet_3_cidr_block" {}
+  
+
+
+
+
