@@ -1,3 +1,5 @@
+<img src="https://github.com/devops-cloud-group/united-wordpress-aws/badge.svg?branch=main"><br>
+<br>
 # 3 Tier Architecture:
 # Wordpress on AWS - Terraform Project 
 
@@ -41,6 +43,7 @@ $ export TF_VAR_domain_name=domain.com
 $ export AWS_ACCESS_KEY_ID={Your AWS_ACCESS_KEY_ID} 
 $ export AWS_SECRET_ACCESS_KEY={Your AWS_SECRET_ACCESS_KEY} 
 
+$ terraform version
 OUTPUT:
 
 Terraform installed. 
