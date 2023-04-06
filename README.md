@@ -27,13 +27,20 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 ## Prerequisites: 
 
 1. AWS account with configured AWS credentials (if running on an EC2, make sure to give admin privilages to the instance). 
-2. Add below Terraform environment variables on the command line or add them in ~/.bashrc . 
-3. Change the region and domain name to your own. 
+2. Install "tfenv" using "installation.sh" file in root directory
 
-```shell 
-$ export TF_VAR_region=us-east-1 
+```shell
+$ bash installation.sh
+```
 
-$ export TF_VAR_domain_name=domain.com
+3. Change the region and domain name in file  /envs/regions/us-west-2/prod.tfvars your own. 
+
+```go 
+public_key = "~/.ssh/id_rsa.pub"
+region     = "us-west-2"
+key_name   = "your_key_name"
+domain     = "yourdomainname.com"
+zone_id = "Z033EIIEIBCYEEX92"
 ```
 
 
@@ -55,7 +62,7 @@ Required version >= 1.1.1
 
 Provide S3 bucket and DynamoDB as Remote Backend **MANUALY**:
 
-1.  Create S3 bucket with name of "tfstate-<Account_ID>" in region "us-east-1" 
+1.  Create S3 bucket with name of "backend/tfstate-<Account_ID>" in region "us-east-1" 
 
 2. Create DynamoDB table name of "tfstate-team1" with LockID key using S3 url
 

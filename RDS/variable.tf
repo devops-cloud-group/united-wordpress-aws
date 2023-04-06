@@ -9,6 +9,12 @@ variable "public_key" {}
 
 variable "region" {}
 variable "domain" {}
+
+# variable "random_password" {
+#   description = "RDS root user password"
+#   type        = string
+#   sensitive   = true
+# }
 # variable "vpc_id" {}
 
 # variable "aws_security_group" {

@@ -44,21 +44,14 @@ resource "aws_security_group" "mysql" {
   description = "Allow  MySQL Port inbound from Backend App Security Group and SSH "
   vpc_id      = aws_vpc.main.id
 
-  # ingress {
-  #   description = "TLS from VPC"
-  #   from_port   = 22
-  #   to_port     = 22
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
   ingress {
     description = "mysql"
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
     #TODO: change this to the security group of the mysql server
-    cidr_blocks = ["0.0.0.0/0"]
-    # cidr_blocks = ["10.0.11.0/24"]
+    cidr_blocks = ["10.0.0.0/16"]
+   
   }
 
   egress {
@@ -105,7 +98,9 @@ resource "aws_subnet" "private_subnets" {
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
-  tags   = var.tags
+    tags = {
+    Name  = "Internet GW"
+}
 }
 
 resource "aws_eip" "eip" {

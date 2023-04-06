@@ -53,7 +53,7 @@ resource "aws_rds_cluster" "default" {
   skip_final_snapshot       = true
   vpc_security_group_ids   = [data.terraform_remote_state.backend.outputs.security_group_mysql_id]
   db_subnet_group_name = aws_db_subnet_group.example.name
-
+  
   
   tags = {
     Name = "rds-cluster"

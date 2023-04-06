@@ -63,7 +63,7 @@ data "terraform_remote_state" "backend" {
 resource "aws_launch_template" "server" {
   name                   = "WebServer-Highly-Available-LT"
   image_id               = data.aws_ami.latest_amazon_linux.id
-  instance_type          = "t3.micro"
+  instance_type          = "t3.small"
   vpc_security_group_ids = [data.terraform_remote_state.backend.outputs.security_group_web_id]
   user_data              = base64encode(file("user_data.sh"))
   lifecycle {
