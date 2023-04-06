@@ -1,4 +1,4 @@
-# 3 Tier Architeture:
+# 3 Tier Architecture:
 # Wordpress on AWS - Terraform Project 
 
 In this project, we aim to build a three-tier wordpress application using Terraform.
@@ -39,9 +39,9 @@ $ export AWS_ACCESS_KEY_ID={Your AWS_ACCESS_KEY_ID}
 $ export AWS_SECRET_ACCESS_KEY={Your AWS_SECRET_ACCESS_KEY} Terraform installed. Required version >= 1.1.1
 ```
 
-During the init process *MANUALLY*:
+Provide S3 bucket and DynamoDB as Remote Backend **MANUALY**:
 
-1.  Create S3 bucket with name of "tfstate-<Account_ID>" in region "us-east-1" as Remote Backend
+1.  Create S3 bucket with name of "tfstate-<Account_ID>" in region "us-east-1" 
 
 2. Create DynamoDB table name of "tfstate-team1" with LockID key using S3 url
 
