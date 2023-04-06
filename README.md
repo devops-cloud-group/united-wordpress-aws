@@ -39,6 +39,9 @@ $ export AWS_ACCESS_KEY_ID={Your AWS_ACCESS_KEY_ID}
 $ export AWS_SECRET_ACCESS_KEY={Your AWS_SECRET_ACCESS_KEY} Terraform installed. Required version >= 1.1.1
 ```
 
+##  Remote Backend
+
+
 Provide S3 bucket and DynamoDB as Remote Backend **MANUALY**:
 
 1.  Create S3 bucket with name of "tfstate-<Account_ID>" in region "us-east-1" 
