@@ -12,7 +12,7 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 * 3 x Private Subnets 
 * 3 x Public Subnets 
 * 1 x Internet Gateway 
-* 1 x NAT Gateway 
+* 3 x NAT Gateway 
 * 1 x Public Route table 
 * 1 x Private Route table 
 * 1 x RDS Aurora cluster with 1 writer, 3 reader instances 
@@ -20,7 +20,7 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 * 1 x Auto Scaling Group (3 minimum 99 maximum instances) 
 * 1 x security group for Web layer 
 * 1 x security group for Database layer 
-* 1 x security group for EFS Route53
+
 
 ## Prerequisites: 
 
