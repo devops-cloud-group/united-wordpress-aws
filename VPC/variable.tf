@@ -38,11 +38,6 @@ variable "private_subnets" {
     ]
 }
 
-
-
-
-
-
 data "aws_route53_zone" "selected" {
   name = "krotiuk.com."
 }

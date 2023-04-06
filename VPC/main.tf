@@ -62,8 +62,6 @@ resource "aws_security_group" "mysql" {
     # cidr_blocks = ["10.0.11.0/24"]
   }
 
-
-
   egress {
     from_port   = 0
     to_port     = 0
