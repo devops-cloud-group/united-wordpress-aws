@@ -2,6 +2,9 @@
 # Wordpress on AWS - Terraform Project 
 
 In this project, we aim to build a three-tier wordpress application using Terraform.
+<figure>
+<img src="https://www.wellarchitectedlabs.com/Reliability/300_Testing_for_Resiliency_of_EC2_RDS_and_S3/Images/ThreeTierArchitecture.png">
+</figure>
 
 ## Resources created:
 
