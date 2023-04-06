@@ -39,7 +39,7 @@ resource "aws_rds_cluster" "default" {
   backup_retention_period = 5
   preferred_backup_window = "07:00-09:00"
   skip_final_snapshot       = true
-  vpc_security_group_ids   = [aws_security_group.allow_RDS_sg.id]
+  vpc_security_group_ids   = [data.terraform_remote_state.backend.outputs.security_group_mysql_id]
   db_subnet_group_name = aws_db_subnet_group.example.name
 
   
@@ -71,3 +71,19 @@ resource "aws_rds_cluster_instance" "reader" {
     Name = "example-reader-${count.index}"
   }
 }
+# resource "aws_route53_record" "db_writer" {
+#   zone_id = data.aws_route53_zone.selected.zone_id
+#   name    = "writer"
+#   type    = "CNAME"
+#   ttl     = 300
+#   records = [aws_rds_cluster_instance.writer[0].endpoint]
+# }
+
+# resource "aws_route53_record" "reader" {
+#   count   = local.readers
+#   zone_id = data.aws_route53_zone.selected.zone_id
+#   name    = "reader${count.index+1}"
+#   type    = "CNAME"
+#   ttl     = 300
+#   records = [aws_rds_cluster_instance.reader[count.index].endpoint]
+# }

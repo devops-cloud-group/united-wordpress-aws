@@ -17,43 +17,47 @@ data "aws_ami" "latest_amazon_linux" {
   filter {
     name   = "name"
     values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+
   }
 }
+
+
+
 data "terraform_remote_state" "backend" { 
     backend = "s3" 
     config = {
         bucket = "terraform-tfstate-wordpress"
-        key    = "backend/terraform.tfstate"
+        key    = "env:/${terraform.workspace}/backend/terraform.tfstate"
         region = "us-west-1"
-        # dynamodb_table = "terraform-prod-lock"
+        dynamodb_table = "terraform-prod-lock"
     } 
 }
 
 #-------------------------------------------------------------------------------
-resource "aws_security_group" "server" {
-  name   = "Web Security Group"
-  vpc_id = data.terraform_remote_state.backend.outputs.vpc_id 
+# resource "aws_security_group" "server" {
+#   name   = "Web Security Group"
+#   vpc_id = data.terraform_remote_state.backend.outputs.vpc_id 
   
   
-  dynamic "ingress" {
-    for_each = ["80", "443","22"]
-    content {
-      from_port   = ingress.value
-      to_port     = ingress.value
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = {
-    Name = "Web Security Group"
-  }
-}
+#   dynamic "ingress" {
+#     for_each = ["80", "443","22"]
+#     content {
+#       from_port   = ingress.value
+#       to_port     = ingress.value
+#       protocol    = "tcp"
+#       cidr_blocks = ["0.0.0.0/0"]
+#     }
+#   }
+#   egress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
+#   tags = {
+#     Name = "Web Security Group"
+#   }
+# }
 
 #-------------------------------------------------------------------------------
 resource "aws_launch_template" "server" {
@@ -74,7 +78,7 @@ resource "aws_autoscaling_group" "server" {
   desired_capacity          = 2
   health_check_grace_period = 300
   health_check_type         = "ELB"
-  vpc_zone_identifier = [data.terraform_remote_state.backend.outputs.azs[*]]
+  vpc_zone_identifier = [data.terraform_remote_state.backend.outputs.public_subnet_ids[0],data.terraform_remote_state.backend.outputs.public_subnet_ids[1],data.terraform_remote_state.backend.outputs.public_subnet_ids[2]]
   target_group_arns   = [aws_lb_target_group.server.arn]
 
   launch_template {
@@ -91,8 +95,8 @@ resource "aws_lb" "server" {
   name               = "WebServer-HighlyAvailable-ALB"
   load_balancer_type = "application"
   #TODO: Check Security Group
-  security_groups    = [data.terraform_remote_state.backend.outputs.aws_security_group.server.id]
-  subnets            = [data.terraform_remote_state.backend.outputs.public_subnet_ids[*]]
+  security_groups    = [data.terraform_remote_state.backend.outputs.security_group_web_id]
+  subnets            = [data.terraform_remote_state.backend.outputs.public_subnet_ids[0],data.terraform_remote_state.backend.outputs.public_subnet_ids[1],data.terraform_remote_state.backend.outputs.public_subnet_ids[2]]
 }
 
 resource "aws_lb_target_group" "server" {

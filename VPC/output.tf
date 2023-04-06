@@ -34,3 +34,7 @@ output "security_group_web_id" {
 output "security_group_mysql_id" {
   value = aws_security_group.mysql.id
 }
+
+output "env" {
+  value = "${terraform.workspace}"
+}

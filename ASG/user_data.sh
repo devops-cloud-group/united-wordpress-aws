@@ -5,6 +5,7 @@ sudo yum update -y
 sudo yum install telnet -y
 sudo yum install httpd -y
 sudo yum install php -y
+sudo yum install php-mysql
 sudo systemctl restart httpd
 sudo systemctl enable httpd
 sudo yum install wget -y
