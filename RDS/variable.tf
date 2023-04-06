@@ -8,7 +8,7 @@ variable "key_name" {}
 variable "public_key" {}
 
 variable "region" {}
-
+variable "domain" {}
 # variable "vpc_id" {}
 
 # variable "aws_security_group" {
@@ -39,9 +39,8 @@ variable "private_subnets" {
 }
 
 
-
 data "aws_route53_zone" "selected" {
-  name = "litovchenko.com."
+  name = var.domain
 }
 
 

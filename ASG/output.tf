@@ -8,5 +8,7 @@ output "azs" {
 output "all" {
   value = data.terraform_remote_state.backend.outputs.*
 }
-
+# output "fqdn" {
+#   value = data.terraform_remote_state.backend.outputs.*
+# }
 
