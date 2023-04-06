@@ -63,12 +63,12 @@ Provide S3 bucket and DynamoDB as Remote Backend **MANUALY**:
 
 Run makefile under same directory where makefile is located.
 
-```shell 
-make build
+```go
+$ make build
 ```
 
 Deleting Resources To delete the Application:
 
-```shell
-make destroy
+```go
+$ make destroy
 ```
