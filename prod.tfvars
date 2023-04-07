@@ -1,5 +1,5 @@
 public_key = "~/.ssh/id_rsa.pub"
-region     = "us-west-2"
+region     = "us-east-1"
 key_name   = "laptop"
 domain     = "litovchenko.net"
 
