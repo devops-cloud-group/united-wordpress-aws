@@ -3,6 +3,7 @@ provider "aws" {
   region = var.region
 }
 
+
 resource "aws_security_group" "web" {
   name        = "frontend_app_sg"
   description = "Allow SSH , HTTP and HTTPS inbound  from Frontend app"

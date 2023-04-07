@@ -32,6 +32,20 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 ```shell
 $ bash installation.sh
 ```
+**Script will create  the "backend.tf" file into VPC folder. Replace parameter values when you have created your own S3 bucket and DynamoDB instance**
+
+```go
+terraform {
+    backend "s3" { 
+        bucket = "terraform-tfstate-wordpress"
+        key    = "backend/terraform.tfstate"
+        region = "us-west-1"                     
+        dynamodb_table = "terraform-prod-lock"   
+    } 
+}
+
+```
+
 
 3. Change the region and domain name in file  /envs/regions/us-west-2/prod.tfvars your own. 
 
@@ -42,6 +56,7 @@ key_name   = "your_key_name"
 domain     = "yourdomainname.com"
 zone_id = "Z033EIIEIBCYEEX92"
 ```
+And also :
 
 
  4. Additionally, if your VM does not have administrator priviliages, run below commands to add your AWS credentials as environment variables.
@@ -50,17 +65,15 @@ zone_id = "Z033EIIEIBCYEEX92"
 $ export AWS_ACCESS_KEY_ID={Your AWS_ACCESS_KEY_ID} 
 $ export AWS_SECRET_ACCESS_KEY={Your AWS_SECRET_ACCESS_KEY} 
 
-$ terraform version
-OUTPUT:
-
-Terraform installed. 
-Required version >= 1.1.1
 ```
 
 ##  Remote Backend
 
+## **REQUIRED!!!**
 
 Provide S3 bucket and DynamoDB as Remote Backend **MANUALY**:
+
+Run 
 
 1.  Create S3 bucket with name of "backend/tfstate-<Account_ID>" in region "us-east-1" 
 
@@ -69,6 +82,12 @@ Provide S3 bucket and DynamoDB as Remote Backend **MANUALY**:
 3. Under VPC>backend.tf change "tfstate-*******" to "tfstate-<Account_ID>"
 
 4. Initializing Terraform Terraform resources will be created using makefile.
+5. Create a file "backend.tf" in VPC folder.
+```shell
+$ touch backend.tf 
+```
+6. Add this config to the file:
+
 
 
 Run makefile under same directory where makefile is located.
