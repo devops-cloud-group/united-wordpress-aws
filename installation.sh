@@ -5,11 +5,11 @@ source ~/.bashrc
 tfenv  install  1.1.1 
 tfenv  use      1.1.1 
 terraform version
-echo "terraform {
-    backend "s3" { 
+echo 'terraform {
+    backend "s3" {
         bucket = "terraform-tfstate-wordpress"
         key    = "backend/terraform.tfstate"
         region = "us-west-1"
         dynamodb_table = "terraform-prod-lock"
     } 
-}" > VPC/backend.tf
+}' > VPC/backend.tf
