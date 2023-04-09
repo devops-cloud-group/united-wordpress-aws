@@ -45,8 +45,6 @@ resource "aws_route53_record" "reader" {
   type    = "CNAME"
   ttl     = 300
   records = [local.reader_instance_endpoints[count.index]]
-  # records = [aws_rds_cluster_instance.db_instance[count.index].reader_endpoint]
-
 }
 resource "aws_db_subnet_group" "example" {
   name       = "example-db-subnet-group"
@@ -89,15 +87,3 @@ resource "aws_rds_cluster_instance" "db_instance" {
     Name = "RDS-instance-${count.index}"
   }
 }
-
-# resource "aws_rds_cluster_instance" "reader" {
-#   count                      = 3
-#   identifier                 = "reader-${count.index}"
-#   cluster_identifier         = aws_rds_cluster.default.id
-#   instance_class             = "db.t3.small"
-#   engine                     = "aurora-mysql"
-#   publicly_accessible        = false
-#   tags = {
-#     Name = "RDS-reader-${count.index}"
-#   }
-# }
