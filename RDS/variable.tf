@@ -6,15 +6,25 @@ variable "tags" {
 variable "key_name" {}
 
 variable "public_key" {}
+variable "rds_username" {
+  description = "Database administrator username"
+  type        = string
+  sensitive   = true
+}
+variable "rds_password" {
+  description = "Database administrator password"
+  type        = string
+  sensitive   = true
+}
 
 variable "region" {}
 variable "domain" {}
 
-# variable "random_password" {
-#   description = "RDS root user password"
-#   type        = string
-#   sensitive   = true
-# }
+variable "random_password" {
+  description = "RDS root user password"
+  type        = string
+  sensitive   = true
+}
 # variable "vpc_id" {}
 
 # variable "aws_security_group" {
@@ -51,7 +61,7 @@ data "aws_route53_zone" "selected" {
 
 
 locals {
-  readers = length(aws_rds_cluster_instance.reader)
+  readers = length(aws_rds_cluster_instance.db_instance[*])
   
 }
 

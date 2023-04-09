@@ -57,8 +57,12 @@ domain     = "yourdomainname.com"
 zone_id = "Z033EIIEIBCYEEX92"
 ```
 And also :
+```shell
+If we have to create new VPC in different region,  we used 'lifecycle' with condition to avoid  Route53 error:  
+    - when we check the region and if it's not a basic "us-west-2" then we will not register new domains and subdomains for the project presentation purposes ONLY.
 
-
+    **Comment this block in files RDS/main.tf and ASG/main.tf**
+```
  4. Additionally, if your VM does not have administrator priviliages, run below commands to add your AWS credentials as environment variables.
 
 ```shell 

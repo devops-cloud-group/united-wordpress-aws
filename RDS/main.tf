@@ -11,24 +11,42 @@ data "terraform_remote_state" "backend" {
         dynamodb_table = "terraform-prod-lock"
     } 
 } 
+locals {
+  db_instance_count = var.region == "us-west-2" ? 0 : local.readers
+}
 
+locals {
+  writer_instance_endpoints = [
+    for instance in aws_rds_cluster_instance.db_instance :
+    instance.writer == true ? instance.endpoint : ""
+  ]
+}
 resource "aws_route53_record" "db_writer" {
+  count = local.db_instance_count
   zone_id = data.aws_route53_zone.selected.zone_id
-  # name    = "writer.selected"
   name    = "writer.wordpress.${var.domain}"
   type    = "CNAME"
   ttl     = 300
-  records = [aws_rds_cluster_instance.writer[0].endpoint]
+  records = [local.writer_instance_endpoints[count.index]]
+  # records = [aws_rds_cluster_instance.db_instance[count.index].endpoint]
+  
 }
-
+locals {
+  reader_instance_endpoints = [
+    for instance in aws_rds_cluster_instance.db_instance :
+    instance.writer ? instance.endpoint : ""
+  ]
+}
 resource "aws_route53_record" "reader" {
-  count   = local.readers
+  
+  count = local.db_instance_count
   zone_id = data.aws_route53_zone.selected.zone_id
   name    = "reader${count.index+1}.wordpress.${var.domain}"
-  # name    = "reader${count.index+1}.selected"
   type    = "CNAME"
   ttl     = 300
-  records = [aws_rds_cluster_instance.reader[count.index].endpoint]
+  records = [local.reader_instance_endpoints[count.index]]
+  # records = [aws_rds_cluster_instance.db_instance[count.index].reader_endpoint]
+
 }
 resource "aws_db_subnet_group" "example" {
   name       = "example-db-subnet-group"
@@ -46,7 +64,7 @@ resource "aws_rds_cluster" "default" {
   engine                  = "aurora-mysql"
   engine_version          = "5.7.mysql_aurora.2.07.2"
   database_name           = "mydb"
-  master_username         = "foo"
+  master_username         = "admin"
   master_password         = random_password.db_master_password.result
   backup_retention_period = 5
   preferred_backup_window = "07:00-09:00"
@@ -56,46 +74,30 @@ resource "aws_rds_cluster" "default" {
   
   
   tags = {
-    Name = "rds-cluster"
+    Name = "Wordpress rds-cluster"
   }
 }
 
-resource "aws_rds_cluster_instance" "writer" {
-  count                      = 1
-  identifier                 = "writer-${count.index}"
+resource "aws_rds_cluster_instance" "db_instance" {
+  count                      = 4
+  identifier                 = "db-instance${count.index+1}"
   cluster_identifier         = aws_rds_cluster.default.id
-  instance_class             = "db.r5.large"
+  instance_class             = "db.t3.small"
   engine                     = "aurora-mysql"
   publicly_accessible        = false
   tags = {
-    Name = "RDS-writer-${count.index}"
+    Name = "RDS-instance-${count.index}"
   }
 }
 
-resource "aws_rds_cluster_instance" "reader" {
-  count                      = 3
-  identifier                 = "reader-${count.index}"
-  cluster_identifier         = aws_rds_cluster.default.id
-  instance_class             = "db.r5.large"
-  engine                     = "aurora-mysql"
-  publicly_accessible        = false
-  tags = {
-    Name = "RDS-reader-${count.index}"
-  }
-}
-# resource "aws_route53_record" "db_writer" {
-#   zone_id = data.aws_route53_zone.selected.zone_id
-#   name    = "writer"
-#   type    = "CNAME"
-#   ttl     = 300
-#   records = [aws_rds_cluster_instance.writer[0].endpoint]
-# }
-
-# resource "aws_route53_record" "reader" {
-#   count   = local.readers
-#   zone_id = data.aws_route53_zone.selected.zone_id
-#   name    = "reader${count.index+1}"
-#   type    = "CNAME"
-#   ttl     = 300
-#   records = [aws_rds_cluster_instance.reader[count.index].endpoint]
+# resource "aws_rds_cluster_instance" "reader" {
+#   count                      = 3
+#   identifier                 = "reader-${count.index}"
+#   cluster_identifier         = aws_rds_cluster.default.id
+#   instance_class             = "db.t3.small"
+#   engine                     = "aurora-mysql"
+#   publicly_accessible        = false
+#   tags = {
+#     Name = "RDS-reader-${count.index}"
+#   }
 # }

@@ -6,6 +6,15 @@ resource "aws_route53_record" "alb" {
   records = [
     aws_lb.server.dns_name
   ]
+  lifecycle {
+    # To avoid  Route53 error if we start to create new VPC in different region we used lifecycle with condition
+    #when we check the region and if it's not a basic "us-west-2" then we will not register new domains and subdomains
+    # for the project presentation purposes.
+    precondition {
+      condition     = var.region == "us-west-2"
+      error_message = "We can not use the same domain name in two different region simultaneously"
+    }
+  }
 }
 
 # # output for domain 
@@ -28,6 +37,15 @@ output "wordpress_records" {
 data "aws_route53_zone" "selected" {
   name         = var.domain
   private_zone = false
+  lifecycle {
+    # To avoid  Route53 error if we start to create new VPC in different region we used lifecycle with condition
+    #when we check the region and if it's not a basic "us-west-2" then we will not register new domains and subdomains
+    # for the project presentation purposes.
+    precondition {
+      condition     = var.region != "us-west-2"
+      error_message = "We can not use the same domain name in two different region simultaneously"
+    }
+  }
 }
 
 variable domain {}
