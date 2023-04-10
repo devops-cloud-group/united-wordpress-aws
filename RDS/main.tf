@@ -32,6 +32,7 @@ resource "aws_rds_cluster" "default" {
   master_password         = var.rds_password
   # master_password         = random_password.db_master_password.result
   backup_retention_period = 5
+  availability_zones      = [data.terraform_remote_state.backend.outputs.azs[0], data.terraform_remote_state.backend.outputs.azs[1], data.terraform_remote_state.backend.outputs.azs[2]]  
   preferred_backup_window = "07:00-09:00"
   skip_final_snapshot       = true
   vpc_security_group_ids   = [data.terraform_remote_state.backend.outputs.security_group_mysql_id]
@@ -70,7 +71,7 @@ locals {
 resource "aws_route53_record" "db_writer" {
   count = local.db_instance_count
   zone_id = data.aws_route53_zone.selected.id
-  name    = "writer.wordpress.${var.domain}"
+  name    = "writer${count.index+1}.wordpress.${var.domain}"
   type    = "CNAME"
   ttl     = 300
   records = [local.writer_instance_endpoints[count.index]]
