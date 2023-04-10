@@ -43,7 +43,7 @@ resource "aws_security_group" "web" {
 resource "aws_security_group" "mysql" {
   description = "Allow  MySQL Port inbound from Backend App Security Group and SSH "
   vpc_id      = aws_vpc.main.id
-
+  name        = "database_security_group"
   ingress {
     description = "mysql"
     from_port   = 3306

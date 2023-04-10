@@ -15,3 +15,4 @@ sudo mv /var/www/html/wordpress/* /var/www/html/
 sudo echo "<?php phpinfo();?>" > /var/www/html/phpinfo.php 
 sudo chown -R apache:apache /var/www/html/
 sudo systemctl restart httpd
+sudo mv /var/www/html/wp-config.php /var/www/html/wp-config-old.php

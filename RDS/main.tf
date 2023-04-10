@@ -26,7 +26,7 @@ resource "random_password" "db_master_password" {
 resource "aws_rds_cluster" "default" {
   cluster_identifier      = "aurora-cluster-demo"
   engine                  = "aurora-mysql"
-  engine_version          = "5.7.mysql_aurora.2.07.2"
+  engine_version          = "8.0.mysql_aurora.3.02.2"
   database_name           = "mydb"
   master_username         = var.rds_username
   master_password         = var.rds_password
@@ -45,7 +45,7 @@ resource "aws_rds_cluster_instance" "db_instance" {
   count                      = 4
   identifier                 = "db-instance${count.index+1}"
   cluster_identifier         = aws_rds_cluster.default.id
-  instance_class             = "db.t3.small"
+  instance_class             = "db.t3.medium"
   engine                     = "aurora-mysql"
   publicly_accessible        = false
   tags = {
