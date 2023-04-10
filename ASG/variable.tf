@@ -2,6 +2,7 @@ variable "tags" {
   type    = map(any)
   default = {}
 }
+variable domain {}
 
 variable "region" {}
 

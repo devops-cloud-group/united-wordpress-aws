@@ -1,64 +1,16 @@
 #------------------------------------------------------------------
 # Provision Highly Availabe Web Cluster
 # Create:
-#    - Security Group for Web Server and ALB
+#   
 #    - Launch Template with Auto AMI Lookup
 #    - Auto Scaling Group using 3 Availability Zones
 #    - Application Load Balancer in 3 Availability Zones
-#    - Application Load Balancer TargetGroup
+#    - ALB TargetGroup
+#    - Route53 Record Set
 #------------------------------------------------------------------
 provider "aws" {
   region = var.region # Region specified in varible.tf file
 }
-  
-data "aws_ami" "latest_amazon_linux" {
-  owners      = ["amazon"]
-  most_recent = true
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-
-  }
-}
-
-
-
-data "terraform_remote_state" "backend" { 
-    backend = "s3" 
-    config = {
-        bucket = "terraform-tfstate-wordpress"
-        key    = "env:/${terraform.workspace}/backend/terraform.tfstate"
-        region = "us-west-1"
-        dynamodb_table = "terraform-prod-lock"
-    } 
-}
-
-#-------------------------------------------------------------------------------
-# resource "aws_security_group" "server" {
-#   name   = "Web Security Group"
-#   vpc_id = data.terraform_remote_state.backend.outputs.vpc_id 
-  
-  
-#   dynamic "ingress" {
-#     for_each = ["80", "443","22"]
-#     content {
-#       from_port   = ingress.value
-#       to_port     = ingress.value
-#       protocol    = "tcp"
-#       cidr_blocks = ["0.0.0.0/0"]
-#     }
-#   }
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-#   tags = {
-#     Name = "Web Security Group"
-#   }
-# }
-
 #-------------------------------------------------------------------------------
 resource "aws_launch_template" "server" {
   name                   = "WebServer-Highly-Available-LT"
@@ -124,6 +76,17 @@ resource "aws_lb_listener" "http" {
 }
 
 #-------------------------------------------------------------------------------
-output "web_loadbalancer_url" {
-  value = aws_lb.server.dns_name
+locals {
+  record53_alb = var.region == "us-west-2" ? 1 : 0
+}
+
+resource "aws_route53_record" "alb" {
+  count = local.record53_alb
+  zone_id = data.aws_route53_zone.selected.zone_id
+  name    = "wordpress.${var.domain}"
+  type    = "CNAME"
+  ttl     = "300"
+  records = [
+    aws_lb.server.dns_name
+  ]
 }

@@ -15,7 +15,13 @@ output "rds_port" {
 output "rds_username" {
   description = "RDS instance root username"
   value       = aws_rds_cluster.default.master_username
+  sensitive = true
 }
+# output "rds_password" {
+#   description = "RDS instance root password"
+#   value       = aws_rds_cluster.default.master_password
+#   sensitive = true
+# }
 
 
 output "all" {

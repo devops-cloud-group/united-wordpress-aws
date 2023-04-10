@@ -18,22 +18,7 @@ variable "rds_password" {
 }
 
 variable "region" {}
-variable "domain" {}
-
-variable "random_password" {
-  description = "RDS root user password"
-  type        = string
-  sensitive   = true
-}
-# variable "vpc_id" {}
-
-# variable "aws_security_group" {
-#   filter {
-#     name   = "vpc-id"
-#     values = [var.vpc_id]
-#   }
-# }
-  
+variable "domain" {} 
 variable "vpc_cidr_block" {
   default = "10.0.0.0/16"
 }
@@ -45,7 +30,6 @@ variable "public_subnets" {
     "10.0.3.0/24"
     ]
 }
-
 variable "private_subnets" {
   default = [
     "10.0.11.0/24",
@@ -54,15 +38,11 @@ variable "private_subnets" {
     ]
 }
 
-
-data "aws_route53_zone" "selected" {
-  name = var.domain
+variable "zone_id" {
+  default = "Z1QD9857MPKBV2"
 }
 
 
-locals {
-  readers = length(aws_rds_cluster_instance.db_instance[*])
-  
-}
+
 
 
