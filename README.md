@@ -32,30 +32,6 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 ```shell
 $ bash installation.sh
 ```
-**Script will create  the "backend.tf" file into VPC folder. Replace parameter values when you have created your own S3 bucket and DynamoDB instance**
-
-```go
-terraform {
-    backend "s3" { 
-        bucket = "terraform-tfstate-wordpress"
-        key    = "backend/terraform.tfstate"
-        region = "us-west-1"                     
-        dynamodb_table = "terraform-prod-lock"   
-    } 
-}
-
-```
-
-
-3. Change the region and domain name in file  /envs/regions/us-west-2/prod.tfvars your own. 
-
-```go 
-public_key = "~/.ssh/id_rsa.pub"
-region     = "us-west-2"
-key_name   = "your_key_name"
-domain     = "yourdomainname.com"
-zone_id = "Z033EIIEIBCYEEX92"
-```
 And also :
 ```shell
 If we have to create new VPC in different region,  we used 'lifecycle' with condition to avoid  Route53 error:  
@@ -90,7 +66,7 @@ Run
 ```shell
 $ touch backend.tf 
 ```
-6. Add this config to the file:
+6. Add this block to file :
 ```shell
 terraform {
     backend "s3" {
@@ -101,8 +77,32 @@ terraform {
     } 
 }
 ```
-**CHANGE ALL parameters to Your Own backend before running "terraform init"**
+**REPLACE ALL parameters to Your Own backend before running "terraform init"**
 
+ **Replace parameter values when you have created your own S3 bucket and DynamoDB instance**
+
+```go
+terraform {
+    backend "s3" { 
+        bucket = "terraform-tfstate-wordpress"
+        key    = "backend/terraform.tfstate"
+        region = "us-west-1"                     
+        dynamodb_table = "terraform-prod-lock"   
+    } 
+}
+
+```
+
+
+**Change the region and domain name in file  /envs/regions/us-west-2/prod.tfvars your own.**
+
+```go 
+public_key = "~/.ssh/id_rsa.pub"
+region     = "us-west-2"
+key_name   = "your_key_name"
+domain     = "yourdomainname.com"
+zone_id = "PUPIUUPUIIEIBCYEEX92"
+```
 Run makefile under same directory where makefile is located.
 
 ```go
