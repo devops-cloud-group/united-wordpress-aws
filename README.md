@@ -91,8 +91,17 @@ Run
 $ touch backend.tf 
 ```
 6. Add this config to the file:
-
-
+```shell
+terraform {
+    backend "s3" {
+        bucket = "terraform-tfstate-wordpress"
+        key    = "backend/terraform.tfstate"
+        region = "us-west-1"
+        dynamodb_table = "terraform-prod-lock"
+    } 
+}
+```
+**CHANGE ALL parameters to Your Own backend before running "terraform init"**
 
 Run makefile under same directory where makefile is located.
 
