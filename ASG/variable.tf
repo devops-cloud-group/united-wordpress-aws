@@ -2,7 +2,7 @@ variable "tags" {
   type    = map(any)
   default = {}
 }
-variable domain {}
+variable "domain" {}
 
 variable "region" {}
 
@@ -20,6 +20,6 @@ variable "rds_password" {
   type        = string
   sensitive   = true
 }
-    
+
 
 

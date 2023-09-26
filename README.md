@@ -26,6 +26,14 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 
 ## Prerequisites: 
 
+### Backend Setup (DynamoDB +S3)
+
+```shell
+$ bash backend-setup.sh
+$ make backend-prod
+```
+
+
 1. AWS account with configured AWS credentials (if running on an EC2, make sure to give admin privilages to the instance). 
 2. Install "tfenv" using "installation.sh" file in root directory
 
@@ -78,12 +86,14 @@ $ export AWS_SECRET_ACCESS_KEY={Your AWS_SECRET_ACCESS_KEY}
 Provide S3 bucket and DynamoDB as Remote Backend **MANUALY**:
 
 Run 
-
-1.  Create S3 bucket with name of "backend/tfstate-<Account_ID>" in region "us-east-1" 
+```shell
+export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+```
+1.  Create S3 bucket with name of "backend/tfstate-$ACCOUNT_ID" in region "us-east-1" 
 
 2. Create DynamoDB table name of "tfstate-team1" with LockID key using S3 url
 
-3. Under VPC>backend.tf change "tfstate-*******" to "tfstate-<Account_ID>"
+3. Under VPC>backend.tf change "tfstate-*******" to "tfstate-$ACCOUNT_ID"
 
 4. Initializing Terraform Terraform resources will be created using makefile.
 5. Create a file "backend.tf" in VPC folder.

@@ -1,5 +1,13 @@
+backend-prod:
+	chmod +x backend-prod-setup.sh && ./backend-prod-setup.sh
+	cd DynamoDB && terraform workspace new prod || terraform workspace select prod  && terraform init -migrate-state &&  terraform  apply  -var-file ../prod.tfvars --auto-approve
+
+destroy-backend:
+	cd DynamoDB && terraform  destroy  -var-file ../prod.tfvars --auto-approve
+
 build:
-	cd VPC && terraform workspace new prod 	|| terraform workspace select prod  && terraform init -reconfigure &&  terraform  apply   -var-file ../prod.tfvars --auto-approve
+	cd VPC && terraform init -reconfigure 
+	cd VPC && terraform workspace new prod || terraform workspace select prod  &&  terraform  apply   -var-file ../prod.tfvars --auto-approve
 	cd ASG && terraform workspace new prod 	|| terraform workspace select prod  && terraform init -reconfigure  &&  terraform  apply   -var-file ../prod.tfvars --auto-approve
 	cd RDS && terraform workspace new prod 	|| terraform workspace select prod  && terraform init -reconfigure &&  terraform  apply   -var-file ../prod.tfvars --auto-approve
 
