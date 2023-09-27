@@ -6,10 +6,10 @@ destroy-backend:
 	cd DynamoDB && terraform  destroy  -var-file ../prod.tfvars --auto-approve
 
 build:
-	cd VPC && terraform init -reconfigure 
-	cd VPC && terraform workspace new prod || terraform workspace select prod  &&  terraform  apply   -var-file ../prod.tfvars --auto-approve
-	cd ASG && terraform workspace new prod 	|| terraform workspace select prod  && terraform init -reconfigure  &&  terraform  apply   -var-file ../prod.tfvars --auto-approve
-	cd RDS && terraform workspace new prod 	|| terraform workspace select prod  && terraform init -reconfigure &&  terraform  apply   -var-file ../prod.tfvars --auto-approve
+	# cd VPC && terraform init -reconfigure 
+	#cd VPC && terraform workspace new prod || terraform workspace select prod  &&  terraform  apply   -var-file ../prod.tfvars --auto-approve
+	 cd ASG && terraform init -reconfigure && terraform workspace new prod || terraform workspace select prod   &&  terraform  apply   -var-file ../prod.tfvars --auto-approve
+	# cd RDS && terraform workspace new prod 	|| terraform workspace select prod  && terraform init -reconfigure &&  terraform  apply   -var-file ../prod.tfvars --auto-approve
 
 destroy:
 	cd RDS && terraform workspace new prod 	|| terraform workspace select prod  && terraform init &&  terraform  destroy  -var-file ../prod.tfvars --auto-approve
