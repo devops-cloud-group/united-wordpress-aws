@@ -29,4 +29,3 @@ data "terraform_remote_state" "backend" {
     dynamodb_table = "terraform-backend-${terraform.workspace}-${data.aws_caller_identity.current.account_id}"
   }
 }
-
