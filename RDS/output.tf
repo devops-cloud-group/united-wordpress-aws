@@ -15,7 +15,7 @@ output "rds_port" {
 output "rds_username" {
   description = "RDS instance root username"
   value       = aws_rds_cluster.default.master_username
-  sensitive = true
+  sensitive   = true
 }
 # output "rds_password" {
 #   description = "RDS instance root password"
@@ -24,8 +24,12 @@ output "rds_username" {
 # }
 
 
-output "all" {
-  value = data.terraform_remote_state.backend.outputs.*
+output "all_network" {
+  value = data.terraform_remote_state.network.outputs.*
+}
+
+output "all_servers" {
+  value = data.terraform_remote_state.servers.outputs.*
 }
 
 # output "db_connect_string" {

@@ -18,10 +18,10 @@ variable "env" {
 # variable "vpc_id" {}
 
 # variable "aws_security_group" {
-#   filter {
-#     name   = "vpc-id"
-#     values = [var.vpc_id]
-#   }
+#   # filter {
+#   #   name   = "vpc-id"
+#   #   values = [var.vpc_id]
+#   # }
 # }
 
 variable "vpc_cidr_block" {
