@@ -8,69 +8,60 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 <img src="https://www.wellarchitectedlabs.com/Reliability/300_Testing_for_Resiliency_of_EC2_RDS_and_S3/Images/ThreeTierArchitecture.png">
 </figure>
 
-## Resources created:
+## Resources will be created:
 
 * 1 x VPC 
-* 3 x Private Subnets 
-* 3 x Public Subnets 
+* 2 x Private Subnets 
+* 2 x Public Subnets 
 * 1 x Internet Gateway 
-* 3 x NAT Gateway 
+* 2 x NAT Gateway 
 * 1 x Public Route table 
 * 1 x Private Route table 
-* 1 x RDS Aurora cluster with 1 writer, 3 reader instances 
+* 1 x RDS Aurora cluster with 1 writer, 1 reader instances 
 * 1 x Application Load Balancer 
-* 1 x Auto Scaling Group (3 minimum 99 maximum instances) 
+* 1 x Auto Scaling Group (2 minimum 99 maximum instances) 
 * 1 x security group for Web layer 
 * 1 x security group for Database layer 
 
 
 ## Prerequisites: 
-
-### Backend Setup (DynamoDB +S3)
-
+1. Git clone the repo
+2. Go to repo directory and edit "envs/prod/prod.tfvars" file:
 ```shell
-$ bash backend-setup.sh
-$ make backend-prod
+export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+cd united-wordpress-aws
+vim envs/prod/prod.tfvars
 ```
-
-
-1. AWS account with configured AWS credentials (if running on an EC2, make sure to give admin privilages to the instance). 
-2. Install "tfenv" using "installation.sh" file in root directory
-
-```shell
-$ bash installation.sh
-```
-**Script will create  the "backend.tf" file into VPC folder. Replace parameter values when you have created your own S3 bucket and DynamoDB instance**
-
-```go
-terraform {
-    backend "s3" { 
-        bucket = "terraform-tfstate-wordpress"
-        key    = "backend/terraform.tfstate"
-        region = "us-west-1"                     
-        dynamodb_table = "terraform-prod-lock"   
-    } 
-}
-
-```
-
-
-3. Change the region and domain name in file  /envs/regions/us-west-2/prod.tfvars your own. 
 
 ```go 
 public_key = "~/.ssh/id_rsa.pub"
-region     = "us-west-2"
-key_name   = "your_key_name"
-domain     = "yourdomainname.com"
-zone_id = "Z033EIIEIBCYEEX92"
-```
-And also :
-```shell
-If we have to create new VPC in different region,  we used 'lifecycle' with condition to avoid  Route53 error:  
-    - when we check the region and if it's not a basic "us-west-2" then we will not register new domains and subdomains for the project presentation purposes ONLY.
+region     = "your-region"       # change
+key_name   = "your_key_name"     # change
+domain     = "yourdomainname.com"# change
+zone_id = "from-route53-region-ID"# change
+rds_username = "admin"            # change the username 
+rds_password = "admin123"         # change the password 
+tags = {
+  Name = "Wordpress-VPC"
+  Team = "AWS"
+}
 
-    **Comment this block in files RDS/main.tf and ASG/main.tf**
 ```
+3. Run script to install environment and version for Terraform
+
+
+```shell
+bash scripts/installation.sh
+```
+### Backend Setup (DynamoDB +S3)
+
+```shell
+$ make backend
+```
+**Script also will create  the "backend.tf" file into VPC,ASG,RDS folders**
+
+
+
  4. Additionally, if your VM does not have administrator priviliages, run below commands to add your AWS credentials as environment variables.
 
 ```shell 
@@ -79,39 +70,30 @@ $ export AWS_SECRET_ACCESS_KEY={Your AWS_SECRET_ACCESS_KEY}
 
 ```
 
-##  Remote Backend
-
-## **REQUIRED!!!**
-
-Provide S3 bucket and DynamoDB as Remote Backend **MANUALY**:
-
-Run 
+ Finnaly, run 
 ```shell
-export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-```
-1.  Create S3 bucket with name of "backend/tfstate-$ACCOUNT_ID" in region "us-east-1" 
-
-2. Create DynamoDB table name of "tfstate-team1" with LockID key using S3 url
-
-3. Under VPC>backend.tf change "tfstate-*******" to "tfstate-$ACCOUNT_ID"
-
-4. Initializing Terraform Terraform resources will be created using makefile.
-5. Create a file "backend.tf" in VPC folder.
-```shell
-$ touch backend.tf 
-```
-6. Add this config to the file:
-
-
-
-Run makefile under same directory where makefile is located.
-
-```go
 $ make build
 ```
+And wait about 20 mins
 
-Deleting Resources To delete the Application:
+
+For Deleting Resources and delete the Application:
+
+
+
 
 ```go
 $ make destroy
 ```
+Test Database accessability: 
+From EC2 instance of Web in your VPC
+
+
+[ec2-user@ip-10-0-1-157 ~]$ mysql -h aurora-cluster-demo.cluster-ctxxweudrhd8.us-west-1.rds.amazonaws.com -u admin -p mydb
+Enter password: admin123
+>
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 219
+Server version: 8.0.23 Source distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
