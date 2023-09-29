@@ -5,9 +5,9 @@ destroy-backend:
 	cd S3-Backend && terraform  destroy  -var-file ../envs/prod/prod.tfvars --auto-approve
 	
 build:
-	#cd VPC &&  terraform init -migrate-state -force-copy  &&  terraform workspace select -or-create prod  && terraform  apply   -var-file ../envs/prod/prod.tfvars --auto-approve
-	# cd ASG && terraform init -migrate-state -force-copy && terraform workspace select -or-create prod    &&  terraform  apply   -var-file ../envs/prod/prod.tfvars --auto-approve
-	 cd RDS && terraform init -migrate-state -force-copy && terraform workspace select -or-create prod    &&  terraform  apply   -var-file ../envs/prod/prod.tfvars --auto-approve
+	cd VPC &&  terraform init -migrate-state -force-copy  &&  terraform workspace select -or-create prod  && terraform  apply   -var-file ../envs/prod/prod.tfvars --auto-approve
+	cd ASG && terraform init -migrate-state -force-copy && terraform workspace select -or-create prod    &&  terraform  apply   -var-file ../envs/prod/prod.tfvars --auto-approve
+	cd RDS && terraform init -migrate-state -force-copy && terraform workspace select -or-create prod    &&  terraform  apply   -var-file ../envs/prod/prod.tfvars --auto-approve
 
 destroy:
 	#cd RDS && terraform workspace new prod 	|| terraform workspace select prod  && terraform init &&  terraform  destroy  -var-file ../envs/prod/prod.tfvars --auto-approve
