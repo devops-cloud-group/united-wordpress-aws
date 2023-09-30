@@ -26,10 +26,20 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 
 ## Prerequisites: 
 1. Git clone the repo
-2. Go to repo directory and edit "envs/prod/prod.tfvars" file:
+2. Go to repo directory to set up ACCOUNT_ID environment variable:
 ```shell
-export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 cd united-wordpress-aws
+export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+```
+
+3. Check if *aws s3* is available:
+```shell
+aws s3 ls
+```
+
+4. Edit "envs/prod/prod.tfvars" file:
+
+```shell 
 vim envs/prod/prod.tfvars
 ```
 
@@ -38,22 +48,21 @@ public_key = "~/.ssh/id_rsa.pub"
 region     = "your-region"       # change
 key_name   = "your_key_name"     # change
 domain     = "yourdomainname.com"# change
-zone_id = "from-route53-region-ID"# change
+zone_id = "copy-from-route53-region-ID"# change
 rds_username = "admin"            # change the username 
 rds_password = "admin123"         # change the password 
 tags = {
   Name = "Wordpress-VPC"
   Team = "AWS"
 }
-
 ```
-3. Run script to install environment and version for Terraform
-
+5. Run script to install Terraform environment and version:
 
 ```shell
 bash scripts/installation.sh
 ```
 ### Backend Setup (DynamoDB +S3)
+Run Makefile:
 
 ```shell
 $ make backend
@@ -61,8 +70,7 @@ $ make backend
 **Script also will create  the "backend.tf" file into VPC,ASG,RDS folders**
 
 
-
- 4. Additionally, if your VM does not have administrator priviliages, run below commands to add your AWS credentials as environment variables.
+6. Additionally, if your VM does not have administrator priviliages, run below commands to add your AWS credentials as environment variables.
 
 ```shell 
 $ export AWS_ACCESS_KEY_ID={Your AWS_ACCESS_KEY_ID} 
@@ -74,26 +82,31 @@ $ export AWS_SECRET_ACCESS_KEY={Your AWS_SECRET_ACCESS_KEY}
 ```shell
 $ make build
 ```
-And wait about 20 mins
+And wait for about 20 mins
 
 
-For Deleting Resources and delete the Application:
-
-
-
+### For Deleting Resources and delete the Application:
 
 ```go
 $ make destroy
 ```
-Test Database accessability: 
-From EC2 instance of Web in your VPC
+#### Test Database accessability: 
 
+***From EC2 instance of Web in your VPC!!!***
+***DB endpoints should be available from the final outputs***
 
+```shell 
 [ec2-user@ip-10-0-1-157 ~]$ mysql -h aurora-cluster-demo.cluster-ctxxweudrhd8.us-west-1.rds.amazonaws.com -u admin -p mydb
-Enter password: admin123
 >
+Enter password: ******
+```
+You should see:
+
+```shell 
 Welcome to the MariaDB monitor.  Commands end with ; or \g.
 Your MySQL connection id is 219
 Server version: 8.0.23 Source distribution
 
 Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+```
