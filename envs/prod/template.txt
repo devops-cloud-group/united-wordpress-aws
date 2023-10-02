@@ -1,0 +1,11 @@
+public_key   = "~/.ssh/id_rsa.pub"
+region       = "us-west-1"
+key_name     = "laptop"
+zone_id      = "Z0BDHDJSLJSJSH92"
+domain       = "your-domain.name"
+rds_username = "admin"
+rds_password = "password"
+tags = {
+  Name = "Wordpress-VPC"
+  Team = "AWS"
+}
