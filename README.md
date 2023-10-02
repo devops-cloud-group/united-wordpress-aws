@@ -28,7 +28,6 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 1. Git clone the repo
 2. Go to repo directory to set up ACCOUNT_ID environment variable:
 ```shell
-<<<<<<< HEAD
 cd united-wordpress-aws
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 ```
@@ -38,13 +37,13 @@ export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 aws s3 ls
 ```
 
-4. Edit "envs/prod/prod.tfvars" file:
+4. Copy content from the "template.txt" file or edit and save it as "envs/prod/prod.tfvars" file:
 
 ```shell 
 vim envs/prod/prod.tfvars
 ```
 
-```go 
+```shell 
 public_key = "~/.ssh/id_rsa.pub"
 region     = "your-region"       # change
 key_name   = "your_key_name"     # change
@@ -58,14 +57,6 @@ tags = {
 }
 ```
 5. Run script to install Terraform environment and version:
-=======
-$ bash installation.sh
-```
-And also :
-```shell
-If we have to create new VPC in different region,  we used 'lifecycle' with condition to avoid  Route53 error:  
-    - when we check the region and if it's not a basic "us-west-2" then we will not register new domains and subdomains for the project presentation purposes ONLY.
->>>>>>> 1c247be (Update README.md)
 
 ```shell
 bash scripts/installation.sh
@@ -89,51 +80,6 @@ $ export AWS_SECRET_ACCESS_KEY={Your AWS_SECRET_ACCESS_KEY}
 
  Finnaly, run 
 ```shell
-<<<<<<< HEAD
-=======
-$ touch backend.tf 
-```
-6. Add this block to file :
-```shell
-terraform {
-    backend "s3" {
-        bucket = "terraform-tfstate-wordpress"
-        key    = "backend/terraform.tfstate"
-        region = "us-west-1"
-        dynamodb_table = "terraform-prod-lock"
-    } 
-}
-```
-**REPLACE ALL parameters to Your Own backend before running "terraform init"**
-
- **Replace parameter values when you have created your own S3 bucket and DynamoDB instance**
-
-```go
-terraform {
-    backend "s3" { 
-        bucket = "terraform-tfstate-wordpress"
-        key    = "backend/terraform.tfstate"
-        region = "us-west-1"                     
-        dynamodb_table = "terraform-prod-lock"   
-    } 
-}
-
-```
-
-
-**Change the region and domain name in file  /envs/regions/us-west-2/prod.tfvars your own.**
-
-```go 
-public_key = "~/.ssh/id_rsa.pub"
-region     = "us-west-2"
-key_name   = "your_key_name"
-domain     = "yourdomainname.com"
-zone_id = "PUPIUUPUIIEIBCYEEX92"
-```
-Run makefile under same directory where makefile is located.
-
-```go
->>>>>>> 1c247be (Update README.md)
 $ make build
 ```
 And wait for about 20 mins
@@ -141,7 +87,7 @@ And wait for about 20 mins
 
 ### For Deleting Resources and delete the Application:
 
-```go
+```shell
 $ make destroy
 ```
 #### Test Database accessability: 
