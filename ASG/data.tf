@@ -21,7 +21,6 @@ data "aws_ami" "latest_amazon_linux" {
 
   }
 }
-
 data "terraform_remote_state" "backend" {
   backend = "s3"
   config = {
