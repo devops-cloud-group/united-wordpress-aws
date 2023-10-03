@@ -3,20 +3,21 @@
 # Get the AWS account ID
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
-# Declare an associative array where the key is the directory and the value is the S3 key
-declare -A paths
-paths=( ["VPC"]="network/terraform.tfstate"
-    ["ASG"]="servers/terraform.tfstate"
-["RDS"]="database/terraform.tfstate" )
+# Directories and their corresponding S3 paths
+dirs=("VPC" "ASG" "RDS")
+keys=("network/terraform.tfstate" "servers/terraform.tfstate" "database/terraform.tfstate")
 
-# Loop through each key-value pair in the associative array
-for dir in "${!paths[@]}"; do
+# Loop through directories and keys
+for i in "${!dirs[@]}"; do
+    dir=${dirs[$i]}
+    key=${keys[$i]}
+
     echo "terraform {
       backend \"s3\" {
         bucket         = \"terraform-tfstate-stage-$ACCOUNT_ID\"
         dynamodb_table = \"terraform-backend-stage-$ACCOUNT_ID\"
-        key            = \"${paths[$dir]}\"
-        region         = \"${var.region}\"
+        key            = \"$key\"
+        region         = \"us-west-1\"
       }
     }" > "$dir/backend.tf"
 done
