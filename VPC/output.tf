@@ -11,6 +11,7 @@ output "account_id" {
   value = data.aws_caller_identity.current.account_id
 }
 
+
 output "vpc_cidr" {
   value = aws_vpc.main.cidr_block
 }
@@ -40,5 +41,6 @@ output "security_group_mysql_id" {
 }
 
 output "env" {
+  value = terraform.workspace
   value = terraform.workspace
 }
