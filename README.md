@@ -39,10 +39,11 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 
 ## Prerequisites: 
 1. Git clone the repo
-2. Go to repo directory to set up ACCOUNT_ID environment variable:
+2. Go to repo directory to set up ACCOUNT_ID and REGION (default) environment variables:
 ```shell
 cd united-wordpress-aws
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+export REGION=$(aws configure get region)
 ```
 
 3. Check if  *aws s3*  is available:
@@ -58,12 +59,12 @@ vim envs/prod/prod.tfvars
 
 ```shell 
 public_key = "~/.ssh/id_rsa.pub"
-region     = "your-region"       # change
-key_name   = "your_key_name"     # change
-domain     = "yourdomainname.com"# change
-zone_id = "copy-from-route53-region-ID"# change
-rds_username = "admin"            # change the username 
-rds_password = "admin123"         # change the password 
+region     = "your-region"              # change if needed
+key_name   = "your_key_name"            # change
+domain     = "yourdomainname.com"       # change
+zone_id = "copy-from-route53-region-ID" # change
+rds_username = "admin"                  # change the username 
+rds_password = "admin123"               # change the password 
 tags = {
   Name = "Wordpress-VPC"
   Team = "AWS"
