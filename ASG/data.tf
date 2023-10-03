@@ -25,9 +25,9 @@ data "aws_ami" "latest_amazon_linux" {
 data "terraform_remote_state" "backend" {
   backend = "s3"
   config = {
-    bucket         = "terraform-tfstate-wordpress"
-    key            = "env:/${terraform.workspace}/backend/terraform.tfstate"
+    bucket         = "terraform-tfstate-${terraform.workspace}-${data.aws_caller_identity.current.account_id}"
+    key            = "env:/prod/servers/terraform.tfstate"
     region         = "us-west-1"
-    dynamodb_table = "terraform-prod-lock"
+    dynamodb_table = "terraform-backend-${terraform.workspace}-${data.aws_caller_identity.current.account_id}"
   }
 }
