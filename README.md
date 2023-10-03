@@ -39,7 +39,7 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 
 ## Prerequisites: 
 1. Git clone the repo
-2. Go to repo directory to set up ACCOUNT_ID and REGION (default) environment variables:
+2. Go to repo directory:
 ```shell
 cd united-wordpress-aws
 ```
