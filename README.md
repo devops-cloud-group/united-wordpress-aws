@@ -10,18 +10,31 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 
 ## Resources will be created:
 
+### Backend-S3-DynamoDB
+* 1 x S3 bucket (prod env)
+* 1 x DynamoDB table
+
+### Infrastructure
 * 1 x VPC 
 * 2 x Private Subnets 
 * 2 x Public Subnets 
-* 1 x Internet Gateway 
-* 2 x NAT Gateway 
 * 1 x Public Route table 
-* 1 x Private Route table 
-* 1 x RDS Aurora cluster with 1 writer, 1 reader instances 
+* 1 x Private Route table
+* 1 x Internet Gateway 
+* 2 x NAT Gateway  
+
+### Frontend layer
+
 * 1 x Application Load Balancer 
-* 1 x Auto Scaling Group (2 minimum 99 maximum instances) 
+* 1 x Auto Scaling Group (2 minimum 99 maximum instances-horizontally scalable) 
 * 1 x security group for Web layer 
-* 1 x security group for Database layer 
+* 2 x EC2 instances (minimum) (WordPress)
+
+
+### Database layer
+
+* 1 x RDS Aurora cluster with 1 writer, 1 reader instances (horizontally scalable)
+* 1 x security group for Database layer  
 
 
 ## Prerequisites: 
@@ -32,7 +45,7 @@ cd united-wordpress-aws
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 ```
 
-3. Check if *aws s3* is available:
+3. Check if  *aws s3*  is available:
 ```shell
 aws s3 ls
 ```
@@ -70,7 +83,7 @@ $ make backend
 **Script also will create  the "backend.tf" file into VPC,ASG,RDS folders**
 
 
-6. Additionally, if your VM does not have administrator priviliages, run below commands to add your AWS credentials as environment variables.
+6. Optionally, if your VM does not have administrator priviliages, run below commands to add your AWS credentials as environment variables.
 
 ```shell 
 $ export AWS_ACCESS_KEY_ID={Your AWS_ACCESS_KEY_ID} 
@@ -78,7 +91,7 @@ $ export AWS_SECRET_ACCESS_KEY={Your AWS_SECRET_ACCESS_KEY}
 
 ```
 
- Finnaly, run 
+7. Finaly, run 
 ```shell
 $ make build
 ```
@@ -90,7 +103,9 @@ And wait for about 20 mins
 ```shell
 $ make destroy
 ```
-#### Test Database accessability: 
+
+
+## Test Database accessability: 
 
 ***From EC2 instance of Web in your VPC!!!***
 ***DB endpoints should be available from the final outputs***
