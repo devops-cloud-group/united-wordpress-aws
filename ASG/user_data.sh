@@ -1,11 +1,11 @@
 #!/bin/bash
 
-echo Installing Telnet
+echo Installing Wordpress, mysql-client, web-server and tools
 sudo yum update -y
 sudo yum install telnet -y
 sudo yum install httpd -y
 sudo yum install php -y
-sudo yum install php-mysql -y
+sudo yum install mysql -y
 sudo systemctl restart httpd
 sudo systemctl enable httpd
 sudo yum install wget -y

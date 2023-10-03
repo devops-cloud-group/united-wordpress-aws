@@ -1,3 +1,8 @@
+output "database_name" {
+  description = "Database name"
+  value       = aws_rds_cluster.default.database_name
+}
+
 output "rds_hostname" {
   description = "RDS Primary instance (writer) hostname"
   value       = aws_rds_cluster.default.endpoint
