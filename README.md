@@ -102,8 +102,17 @@ And wait for about 20 mins
 
 ```shell
 $ make destroy
-```
 
+```
+#### TROUBLESHOOTING: 
+
+In case of error when deleteing S3 bucket use AWS console and manually empty and delete the bucket
+```shell
+
+│ Error: deleting Amazon S3 (Simple Storage) Bucket (terraform-tfstate-prod-1999999999999): BucketNotEmpty: The bucket you tried to delete is not empty. You must delete all versions in the bucket.
+│       status code: 409, request id: HAMSEY42N6MG45QR, host id: h8kkpMo03yqa5U+esfQJZwgeaenEg63dqUexPPYV4b4j63JNfQjiJO8WlwyifBF5qK5OeE7ZXlU=
+│ 
+```
 
 ## Test Database accessability: 
 
