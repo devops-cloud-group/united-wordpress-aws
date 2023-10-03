@@ -42,8 +42,6 @@ In this project, we aim to build a three-tier wordpress application using Terraf
 2. Go to repo directory to set up ACCOUNT_ID and REGION (default) environment variables:
 ```shell
 cd united-wordpress-aws
-export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-export REGION=$(aws configure get region)
 ```
 
 3. Check if  *aws s3*  is available:
