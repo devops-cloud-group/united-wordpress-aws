@@ -16,7 +16,7 @@ for dir in "${!paths[@]}"; do
         bucket         = \"terraform-tfstate-prod-$ACCOUNT_ID\"
         dynamodb_table = \"terraform-backend-prod-$ACCOUNT_ID\"
         key            = \"${paths[$dir]}\"
-        region         = \"us-west-1\"
+        region         = \"${var.region}\"
       }
     }" > "$dir/backend.tf"
 done
