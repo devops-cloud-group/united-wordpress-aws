@@ -42,5 +42,4 @@ output "security_group_mysql_id" {
 
 output "env" {
   value = terraform.workspace
-  value = terraform.workspace
 }
