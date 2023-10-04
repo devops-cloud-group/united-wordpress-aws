@@ -1,6 +1,6 @@
 backend:
-	cd S3-Backend && terraform workspace new prod || terraform workspace select prod  && terraform init && terraform  apply  -var-file ../envs/prod/prod.tfvars --auto-approve && terraform init -backend-config=../envs/prod/config.s3.tfbackend
-	bash scripts/backend-prod-setup.sh
+	cd S3-Backend && terraform workspace new prod || terraform workspace select prod   && terraform init -backend-config=../envs/prod/config.s3.tfbackend && terraform  apply  -var-file ../envs/prod/prod.tfvars --auto-approve 
+	# bash scripts/backend-prod-setup.sh
 destroy-backend:
 	cd S3-Backend && terraform  destroy  -var-file ../envs/prod/prod.tfvars --auto-approve
 	
