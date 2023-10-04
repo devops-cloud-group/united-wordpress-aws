@@ -15,9 +15,9 @@ for i in "${!dirs[@]}"; do
     echo "terraform {
       backend \"s3\" {
         bucket         = \"terraform-tfstate-prod-$ACCOUNT_ID\"
-        dynamodb_table = \"terraform-backend-prod-$ACCOUNT_ID\"
+        dynamodb_table = \"terraform-backend-prod-lock\"
         key            = \"$key\"
-        region         = "var.region"
+        region         = \"us-west-1\"
       }
     }" > "$dir/backend.tf"
 done

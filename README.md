@@ -1,9 +1,16 @@
 <img src="https://github.com/devops-cloud-group/united-wordpress-aws/badge.svg?branch=main"><br>
 <br>
 # 3 Tier Architecture:
-# Wordpress on AWS - Terraform Project 
+# Wordpress on AWS - Terraform for multiple teams Project 
 
-In this project, we aim to build a three-tier wordpress application using Terraform.
+<div style="background-color: blue; color: white; padding: 10px; border-radius: 5px;">
+
+In this project, we aimed to build a three-tier wordpress application using Terraform in a real-world environment where devops team distributed around the world and each block is provided by independent contributors or groups. 
+ To make it possible we use "remote" backend for Terraform on S3 bucket (versioning enabled) and DynamoDB to keep state locked for only a transaction in a time. This approach allowes working as a team  on the same terraform.tfstate file.
+
+ Also in production environment we have implemented a separate backend files for each team using different keys(path) to the terraform.tfstate files
+
+</div>
 <figure>
 <img src="https://www.wellarchitectedlabs.com/Reliability/300_Testing_for_Resiliency_of_EC2_RDS_and_S3/Images/ThreeTierArchitecture.png">
 </figure>

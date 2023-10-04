@@ -11,11 +11,11 @@ keys=("network/terraform.tfstate" "servers/terraform.tfstate" "database/terrafor
 for i in "${!dirs[@]}"; do
     dir=${dirs[$i]}
     key=${keys[$i]}
-
+    
     echo "terraform {
       backend \"s3\" {
         bucket         = \"terraform-tfstate-stage-$ACCOUNT_ID\"
-        dynamodb_table = \"terraform-backend-stage-$ACCOUNT_ID\"
+        dynamodb_table = \"terraform-backend-stage-lock\"
         key            = \"$key\"
         region         = \"us-west-1\"
       }

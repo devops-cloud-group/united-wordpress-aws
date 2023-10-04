@@ -20,7 +20,7 @@ module "s3_bucket" {
 
 
 resource "aws_dynamodb_table" "dynamodb-terraform-state-lock" {
-  name           = "terraform-backend-${terraform.workspace}-${data.aws_caller_identity.current.account_id}"
+  name           = "terraform-backend-${terraform.workspace}-lock"
   hash_key       = "LockID"
   read_capacity  = 10
   write_capacity = 10
